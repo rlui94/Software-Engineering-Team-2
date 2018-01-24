@@ -1,0 +1,141 @@
+page-game {
+.box-left {
+  overflow: hidden;
+}
+
+#game_board {
+  overflow: hidden;
+  background-color: #0066FF;
+  border: 5px solid #0066FF;
+  margin: auto;
+  td {
+    background-color: #FFFFFF;
+    position: relative;
+    width: 5vw;
+    height: 5vw;
+    cursor: pointer;
+    &:hover::after {
+      background-color: #F4F4F4;
+      content: '';
+      height: 10000px;
+      left: 0;
+      position: absolute;
+      top: -5000px;
+      width: 100%;
+      z-index: -1;
+    }
+  }
+}
+
+.hover {
+  background-color: #F4F4F4;
+}
+
+#coin {
+  position: absolute;
+  display: none;
+  left: 0px;
+  top: 0px;
+  width: 51px;
+  height: 51px;
+  border-radius: 50%;
+}
+
+.finished td:hover::after {
+  background-color: transparent !important;
+}
+
+#game_board {
+  td {
+    border-radius: 50%;
+  }
+  .coin {
+    cursor: default;
+  }
+  tr {
+    width: 100%;
+    height: 100%;
+  }
+  .human-coin {
+    border-radius: 50%;
+    background: #333;
+  }
+}
+
+.human-coin {
+  border-radius: 50%;
+  background: #333;
+}
+
+#game_board .computer-coin, .computer-coin {
+  border-radius: 50%;
+  background: #DC143C;
+}
+
+.human {
+  color: #333;
+}
+
+.computer {
+  color: #DC143C;
+}
+
+#game_board .win {
+  border-radius: 50%;
+  animation: animationFrames 1s infinite;
+}
+
+@keyframes animationFrames {
+  50% {
+    opacity: 0.6;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+
+.box-right {
+
+}
+
+.box-left {
+  margin: auto;
+  width: 100%;
+  max-width: 1000px;
+  text-align: center;
+}
+
+#loading {
+  display: none;
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  font-size: 10px;
+  background: #DC143C;
+  color: #fff;
+  padding: 4px;
+}
+
+.status-running, .status-won, .status-lost {
+  padding: 0px 2px;
+  color: #333;
+}
+
+.status-running {
+  background: #ccc;
+}
+
+.status-won {
+  background: #5FBF5F;
+}
+
+.status-lost {
+  background: #F36051;
+}
+
+.status-tie {
+  background: #A4E7F0;
+}
+}

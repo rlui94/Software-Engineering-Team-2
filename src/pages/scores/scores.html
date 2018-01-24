@@ -1,0 +1,20 @@
+<ion-header>
+  <ion-navbar color="primary">
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>
+		<ion-icon name="trending-up"></ion-icon>
+		High Scores
+	</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+    <ion-item *ngFor="let score of scores">
+		<span item-left>{{score.player}}</span>
+        <span item-right>{{score.score}}</span>
+	</ion-item>
+  </ion-list>
+</ion-content>

@@ -1,0 +1,76 @@
+<ion-header>
+  <ion-navbar color="primary">
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>
+		<ion-icon name="home"></ion-icon>
+		Connect Four
+	</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content>
+	<ion-list>
+		<form #formData='ngForm' (ngSubmit)="onSubmit(formData.value)">
+			<ion-list [(ngModel)]="opponent" name="opponent" radio-group>
+				<ion-list-header>
+					Opponent:
+				</ion-list-header>
+				<ion-item>
+					<ion-label>Human vs Human</ion-label>
+					<ion-radio value="1"></ion-radio>
+				</ion-item>
+				<ion-item>
+					<ion-label>Human vs Computer (AI)</ion-label>
+					<ion-radio value="2" checked></ion-radio>
+				</ion-item>
+			</ion-list>
+			
+			<ion-item>
+				<ion-label *ngIf="formData.value.opponent == 1" floating>Player 1's name:</ion-label>
+				<ion-label *ngIf="formData.value.opponent == 2" floating>The Humans name:</ion-label>
+				<ion-input type="text" [(ngModel)]="player1" name="player1" pattern="[a-zA-Z0-9\- ]+" required></ion-input>
+			</ion-item>
+
+			<ion-item *ngIf="formData.value.opponent == 1">
+				<ion-label floating>Player 2's name:</ion-label>
+				<ion-input type="text" [(ngModel)]="player2" name="player2" required></ion-input>
+			</ion-item>
+			
+			<ion-item>
+				<ion-label stacked>Board size:</ion-label>
+				<ion-select [(ngModel)]="size" name="size" required>
+				<ion-option value="1">7 × 6</ion-option>
+				<ion-option value="2">8 × 7</ion-option>
+				<ion-option value="3" selected>10 × 8</ion-option>
+				</ion-select>
+			</ion-item>
+
+			<ion-list [(ngModel)]="first" name="first" radio-group>
+				<ion-list-header>
+					Player going first:
+				</ion-list-header>
+				<ion-item>
+					<ion-label *ngIf="formData.value.opponent == 1">Player 1</ion-label>
+					<ion-label *ngIf="formData.value.opponent == 2">Human</ion-label>
+					<ion-radio value="0" checked></ion-radio>
+				</ion-item>
+				<ion-item>
+					<ion-label *ngIf="formData.value.opponent == 1">Player 2</ion-label>
+					<ion-label *ngIf="formData.value.opponent == 2">Computer</ion-label>
+					<ion-radio value="1"></ion-radio>
+				</ion-item>
+			</ion-list>
+			
+			<ion-item>
+				<ion-label floating>Number of rounds:</ion-label>
+				<ion-input type="number" [(ngModel)]="rounds" name="rounds" value="1" pattern="[1-9][0-9]*" required></ion-input>
+			</ion-item>
+
+			<div padding>
+				<button ion-button type="onSubmit()" [disabled]="formData.form.invalid" block>Start Game</button>
+			</div>
+		</form>
+	</ion-list>
+</ion-content>

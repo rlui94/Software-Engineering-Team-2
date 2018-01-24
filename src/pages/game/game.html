@@ -1,0 +1,36 @@
+<ion-header>
+  <ion-navbar color="primary">
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>
+		<ion-icon name="game-controller-a"></ion-icon>
+		Connect Four
+	</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content>
+	<div class="box-left">
+		<h2 *ngIf="round == 0 && status == 0">{{player1}} ⚫</h2>
+		<h2 *ngIf="round == 1 && status == 0">{{player2}} 🔴</h2>
+		<table id="game_board">
+			<tr *ngFor="let i of arows">
+				<td *ngFor="let j of acolumns" (click)="act($event)" class='empty'></td>
+			</tr>
+		</table> 
+		<div id="loading">The Computer is thinking…</div>
+		<p>Player 1 is <span class="human"><strong>Black</strong></span> ⚫ Player 2 is <span class="computer"><strong>Red</strong></span> 🔴</p>
+	</div>
+
+	<div class="box-right">
+		<div id="debug">
+			<h3>Info</h3>
+			<p>Generated with <span id="ai-iterations">?</span> iterations<br>
+			Measured with <span id="ai-time">?</span><br>
+			<span id="ai-column">Column: ?</span><br>
+			<span id="ai-score">Score: ?</span></p>
+			<p>Status: <span id="status" class="status-running">running</span></p>
+		</div>
+	</div>
+</ion-content>
