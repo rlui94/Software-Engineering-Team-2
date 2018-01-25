@@ -6,8 +6,9 @@ page-game {
 #game_board {
   overflow: hidden;
   background-color: #0066FF;
-  border: 5px solid #0066FF;
   margin: auto;
+  border-collapse: separate;
+  border-spacing: 10px;
   td {
     background-color: #FFFFFF;
     position: relative;
@@ -103,7 +104,6 @@ page-game {
 .box-left {
   margin: auto;
   width: 100%;
-  max-width: 1000px;
   text-align: center;
 }
 
@@ -112,7 +112,6 @@ page-game {
   position: absolute;
   top: 10px;
   left: 10px;
-  font-size: 10px;
   background: #DC143C;
   color: #fff;
   padding: 4px;
