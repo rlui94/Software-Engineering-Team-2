@@ -8,6 +8,7 @@ import { HomePage } from '../pages/home/home';
 import { GamePage } from '../pages/game/game';
 import { ScoresPage } from '../pages/scores/scores';
 import { SettingsPage } from '../pages/settings/settings';
+import { PopoverPage } from '../pages/scores/popover';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
@@ -20,7 +21,8 @@ import { User } from '../providers/user';
     HomePage,
     GamePage,
     ScoresPage,
-    SettingsPage
+    SettingsPage,
+	PopoverPage
   ],
   imports: [
     BrowserModule,
@@ -33,7 +35,8 @@ import { User } from '../providers/user';
     HomePage,
     GamePage,
     ScoresPage,
-    SettingsPage
+    SettingsPage,
+	PopoverPage
   ],
   providers: [
     StatusBar,

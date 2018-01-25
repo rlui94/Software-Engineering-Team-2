@@ -21,12 +21,20 @@ export class User {
 	}
 	
 	setscore(player: string, score: number) {
+		let highscore = 0;
+		
 		let index = this.scores.map((s) => { return s.player; }).indexOf(player);
 		
 		if (index > -1)
+		{
 			this.scores[index].score += score;
+			highscore = this.scores[index].score;
+		}
 		else
+		{
 			this.scores.push({player: player, score: score});
+			highscore = score;
+		}
 			
 		this.scores.sort((a, b) => { 
 			if (a.score == b.score)
@@ -35,6 +43,13 @@ export class User {
 				return a.score - b.score;
 		});
 		
+		this.storage.set('scores', this.scores);
+		
+		return highscore;
+	}
+	
+	clearscores() {
+		this.scores = [];
 		this.storage.set('scores', this.scores);
 	}
 	

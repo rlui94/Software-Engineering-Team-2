@@ -32,9 +32,7 @@ export class GamePage {
   }
   
   ngOnInit() {
-    this.player1 = this.navParams.data.player1;
-	this.player2 = this.opponent == 2 ? "Computer" : this.navParams.data.player2;
-	this.rounds = this.navParams.data.rounds;
+    this.rounds = this.navParams.data.rounds;
 	
 	// Dropdown value
 	this.opponent = this.navParams.data.opponent;
@@ -58,6 +56,8 @@ export class GamePage {
 	this.acolumns = Array(this.columns);
 	this.status = 0;
 	this.round = this.navParams.data.first;
+	this.player1 = this.navParams.data.player1;
+	this.player2 = this.opponent == 2 ? "Computer" : this.navParams.data.player2;
 	this.init();
 	document.getElementById('current-round').innerHTML = this.currentRound.toString();
 	document.getElementById('total-rounds').innerHTML = this.rounds.toString();
@@ -68,6 +68,8 @@ export class GamePage {
 	//document.getElementById('ai-column').innerHTML = "Column: ?";
 	//document.getElementById('ai-score').innerHTML = "Score: ?";
 	//document.getElementById('game_board').className = "";
+	if (this.opponent != 2)
+		document.getElementById('debug').style.display = "none";
 	this.updateStatus();
 	
 	this.init();
@@ -303,7 +305,9 @@ export class GamePage {
 		if (this.score(this.board) == -this.ascore) {
 			this.status = 1;
 			this.markWin();
-			alert(this.player1 + " has won!");
+
+			let score = this.user.setscore(this.player1, 1);
+			alert(this.player1 + " has won!\nNew high score of " + score + ".");
 			this.user.setscore(this.player1, 1);
 			roundEnd = true;
 			this.player1Wins += 1;
@@ -314,12 +318,17 @@ export class GamePage {
 		if (this.score(this.board) == this.ascore) {
 			this.status = 2;
 			this.markWin();
-			alert(this.player2 + " has won!");
+			let message = this.player2 + " has won!";
 			if (this.opponent != 2)
 				this.user.setscore(this.player2, 1);
 			roundEnd = true;
 			this.player2Wins += 1;
 			document.getElementById('player-two-wins').innerHTML = this.player2Wins.toString();
+			{
+				let score = this.user.setscore(this.player2, 1);
+				message += "\nNew high score of " + score + "."
+			}
+			alert(message);
 		}
 
 		// Tie
