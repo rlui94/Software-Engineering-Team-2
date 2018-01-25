@@ -294,9 +294,7 @@ export class GamePage {
 			}
 		}
 
-		// Create from board object (see board.js)
 		this.board = game_board;
-
 	}
 
 	updateStatus(): void {
@@ -309,26 +307,29 @@ export class GamePage {
 			let score = this.user.setscore(this.player1, 1);
 			alert(this.player1 + " has won!\nNew high score of " + score + ".");
 			this.user.setscore(this.player1, 1);
-			roundEnd = true;
+
 			this.player1Wins += 1;
 			document.getElementById('player-one-wins').innerHTML = this.player1Wins.toString();
+			roundEnd = true;
 		}
 
 		// Computer won
 		if (this.score(this.board) == this.ascore) {
 			this.status = 2;
 			this.markWin();
+
 			let message = this.player2 + " has won!";
 			if (this.opponent != 2)
 				this.user.setscore(this.player2, 1);
-			roundEnd = true;
-			this.player2Wins += 1;
-			document.getElementById('player-two-wins').innerHTML = this.player2Wins.toString();
 			{
 				let score = this.user.setscore(this.player2, 1);
 				message += "\nNew high score of " + score + "."
 			}
 			alert(message);
+
+			this.player2Wins += 1;
+			document.getElementById('player-two-wins').innerHTML = this.player2Wins.toString();
+			roundEnd = true;
 		}
 
 		// Tie
