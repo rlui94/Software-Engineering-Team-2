@@ -23,6 +23,9 @@ export class GamePage {
   player1: string;
   player2: string;
   rounds: number = 1;
+  currentRound: number = 1;
+  player1Wins: number = 0;
+  player2Wins: number = 0;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, private user: User) {
     
@@ -56,6 +59,10 @@ export class GamePage {
 	this.status = 0;
 	this.round = this.navParams.data.first;
 	this.init();
+	document.getElementById('current-round').innerHTML = this.currentRound.toString();
+	document.getElementById('total-rounds').innerHTML = this.rounds.toString();
+	document.getElementById('player-one-wins').innerHTML = this.player1Wins.toString();
+	document.getElementById('player-two-wins').innerHTML = this.player2Wins.toString();
 	//document.getElementById('ai-iterations').innerHTML = "?";
 	//document.getElementById('ai-time').innerHTML = "?";
 	//document.getElementById('ai-column').innerHTML = "Column: ?";
@@ -77,7 +84,7 @@ export class GamePage {
 				game_board[i][j] = null;
 			}
 		}
-		
+
 		// Create from board object (see board.js)
 		this.board = game_board;
 
@@ -273,13 +280,34 @@ export class GamePage {
 		}
 	}
 
+
+	newBoard(): void {
+		var game_board = new Array(this.rows);
+		for (var i = 0; i < game_board.length; i++) {
+			game_board[i] = new Array(this.columns);
+
+			for (var j = 0; j < game_board[i].length; j++) {
+				game_board[i][j] = null;
+				(<HTMLTableElement>document.getElementById('game_board')).rows[i].cells[j].className = 'empty';
+			}
+		}
+
+		// Create from board object (see board.js)
+		this.board = game_board;
+
+	}
+
 	updateStatus(): void {
 		// Human won
+		var roundEnd = false;
 		if (this.score(this.board) == -this.ascore) {
 			this.status = 1;
 			this.markWin();
 			alert(this.player1 + " has won!");
 			this.user.setscore(this.player1, 1);
+			roundEnd = true;
+			this.player1Wins += 1;
+			document.getElementById('player-one-wins').innerHTML = this.player1Wins.toString();
 		}
 
 		// Computer won
@@ -289,12 +317,25 @@ export class GamePage {
 			alert(this.player2 + " has won!");
 			if (this.opponent != 2)
 				this.user.setscore(this.player2, 1);
+			roundEnd = true;
+			this.player2Wins += 1;
+			document.getElementById('player-two-wins').innerHTML = this.player2Wins.toString();
 		}
 
 		// Tie
 		if (this.isFull(this.board)) {
 			this.status = 3;
 			alert("Tie!");
+			roundEnd = true;
+		}
+
+		//When a round ends, clear the board and go to next round.
+		if(roundEnd){
+			if(this.currentRound < this.rounds){
+				this.currentRound += 1;
+				document.getElementById('current-round').innerHTML = this.currentRound.toString();
+				this.newBoard();
+			}
 		}
 
 		var html = document.getElementById('status');
