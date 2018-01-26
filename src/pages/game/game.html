@@ -14,6 +14,9 @@
 	<div class="box-left">
 		<h2 *ngIf="round == 0 && status == 0">{{player1}} ⚫</h2>
 		<h2 *ngIf="round == 1 && status == 0">{{player2}} 🔴</h2>
+		<h2 *ngIf="winner == 1"> {{player1}} Wins</h2>
+		<h2 *ngIf="winner == 2"> {{player2}} Wins</h2>
+		<h2 *ngIf="winner == 3"> Players Tied! </h2>
 		<table id="game_board">
 			<tr *ngFor="let i of arows">
 				<td *ngFor="let j of acolumns" (click)="act($event)" class='empty'></td>
