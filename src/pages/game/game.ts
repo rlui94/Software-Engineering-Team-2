@@ -22,9 +22,9 @@ export class GamePage {
   board: any;
   player1: string;
   player2: string;
-  rounds: number = 1;
+  rounds: number = 1; // Number of rounds to play
   currentRound: number = 1;
-  player1Wins: number = 0;
+  player1Wins: number = 0; // Players score for the current game
   player2Wins: number = 0;
   winner: number = 0;
 
@@ -62,8 +62,6 @@ export class GamePage {
 	this.init();
 	document.getElementById('current-round').innerHTML = this.currentRound.toString();
 	document.getElementById('total-rounds').innerHTML = this.rounds.toString();
-	document.getElementById('player-one-wins').innerHTML = this.player1Wins.toString();
-	document.getElementById('player-two-wins').innerHTML = this.player2Wins.toString();
 	if (this.opponent != 2)
 		document.getElementById('debug').style.display = "none";
 	this.updateStatus();
@@ -322,11 +320,9 @@ export class GamePage {
 	updateWinScores(): void{
 		if(this.status == 1){
 			this.player1Wins += 1;
-			document.getElementById('player-one-wins').innerHTML = this.player1Wins.toString();
 		}
 		else if(this.status == 2){
 			this.player2Wins += 1;
-			document.getElementById('player-two-wins').innerHTML = this.player2Wins.toString();
 		}
 
 	}
@@ -379,7 +375,7 @@ export class GamePage {
 			this.markWin();
 
 			let score = this.user.setscore(this.player1, 1);
-			alert(this.player1 + " has won!\nNew high score of " + score + ".");
+			alert(this.player1 + " has won the round!\nNew high score of " + score + ".");
 			this.user.setscore(this.player1, 1);
 
 		}
@@ -389,7 +385,7 @@ export class GamePage {
 			this.status = 2;
 			this.markWin();
 
-			let message = this.player2 + " has won!";
+			let message = this.player2 + " has won the round!";
 			if (this.opponent != 2)
 				this.user.setscore(this.player2, 1);
 			{
