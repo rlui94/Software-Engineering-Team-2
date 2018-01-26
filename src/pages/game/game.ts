@@ -60,10 +60,10 @@ export class GamePage {
 	this.player1 = this.navParams.data.player1;
 	this.player2 = this.opponent == 2 ? "Computer" : this.navParams.data.player2;
 	this.init();
-	document.getElementById('current-round').innerHTML = this.currentRound.toString();
-	document.getElementById('total-rounds').innerHTML = this.rounds.toString();
-	if (this.opponent != 2)
+	if (this.opponent != 2){
 		document.getElementById('debug').style.display = "none";
+	}
+
 	this.updateStatus();
 	
 	this.init();
@@ -342,7 +342,6 @@ export class GamePage {
 			//and clear the game board.
 			if(this.currentRound < this.rounds){
 				this.currentRound += 1;
-				document.getElementById('current-round').innerHTML = this.currentRound.toString();
 				this.resetBoard();
 			}
 			//otherwise state the winner of the game.

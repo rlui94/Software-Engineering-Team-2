@@ -23,7 +23,7 @@
 			</tr>
 		</table> 
 		<div id="loading">The Computer is thinking…</div>
-		<p>Round <span id="current-round"></span> / <span id="total-rounds"></span></p>
+		<p>Round: {{currentRound}} / {{rounds}}</p>
 		<h2 *ngIf="winner != 0">Final score: {{player1Wins}} - {{player2Wins}}</h2>
 		<p>Player 1 is <span class="human"><strong>Black</strong></span> ⚫ Player 2 is <span class="computer"><strong>Red</strong></span> 🔴</p>
 	</div>
