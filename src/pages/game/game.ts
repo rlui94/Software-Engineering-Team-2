@@ -22,7 +22,11 @@ export class GamePage {
   board: any;
   player1: string;
   player2: string;
-  rounds: number = 1;
+  rounds: number = 1; // Number of rounds to play
+  currentRound: number = 1;
+  player1Wins: number = 0; // Players score for the current game
+  player2Wins: number = 0;
+  winner: number = 0;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, private user: User) {
     
@@ -56,18 +60,21 @@ export class GamePage {
 	this.player1 = this.navParams.data.player1;
 	this.player2 = this.opponent == 2 ? "Computer" : this.navParams.data.player2;
 	this.init();
-	//document.getElementById('ai-iterations').innerHTML = "?";
-	//document.getElementById('ai-time').innerHTML = "?";
-	//document.getElementById('ai-column').innerHTML = "Column: ?";
-	//document.getElementById('ai-score').innerHTML = "Score: ?";
-	//document.getElementById('game_board').className = "";
-	if (this.opponent != 2)
+	if (this.opponent != 2){
 		document.getElementById('debug').style.display = "none";
+	}
+
 	this.updateStatus();
 	
 	this.init();
   }
 
+
+
+	/*
+	 * Create initial game board
+	 *
+	 */
 	init(): void {
 		// Generate 'real' board
 		// Create 2-dimensional array
@@ -79,34 +86,17 @@ export class GamePage {
 				game_board[i][j] = null;
 			}
 		}
-		
+
 		// Create from board object (see board.js)
 		this.board = game_board;
 
-		/*// Generate visual board
-		var agame_board = "";
-		for (var i = 0; i < this.rows; i++) {
-			agame_board += "<tr>";
-			for (var j = 0; j < this.columns; j++) {
-				agame_board += "<td class='empty'></td>";
-			}
-			agame_board += "</tr>";
-		}
-
-		document.getElementById('game_board').innerHTML = agame_board;
-
-		// Action listeners
-		var td = document.getElementById('game_board').getElementsByTagName("td");
-
-		for (var i = 0; i < td.length; i++) {
-			if (td[i].addEventListener) {
-				td[i].addEventListener('click', (e:Event) => { this.act(e) }, false);
-			}
-		}*/
 	}
+
+
 
 	/**
 	 * On-click event
+	 *
 	 */
 	act(e: Event): void {
 		var element = e.target || window.event.srcElement;
@@ -128,6 +118,11 @@ export class GamePage {
 		}
 	}
 
+
+	/*
+	 * Finds first available location of specific column.
+	 *
+	 */
 	place(column: number): void {
 		// If not finished
 		if (this.score(this.board) != this.ascore && this.score(this.board) != -this.ascore && !this.isFull(this.board)) {
@@ -144,6 +139,11 @@ export class GamePage {
 		}
 	}
 	
+
+	/*
+	 * Puts disk in specific location(I think loop == disk)
+	 *
+	 */
 	dropLoop(y: number, column: number, ay: number) {
 		setTimeout(() => {
 			if(y != 0)
@@ -165,10 +165,16 @@ export class GamePage {
 
 				this.round = this.switchRound(this.round);
 				this.updateStatus();
+				this.updateWinScores();
+				this.updateRound();
 			}
 		}, 50);
 	}
 
+	/*
+	 * AI
+	 *
+	 */
 	generateComputerDecision(): void {
 		if (this.score(this.board) != this.ascore && this.score(this.board) != -this.ascore && !this.isFull(this.board)) {
 			this.iterations = 0; // Reset iteration count
@@ -236,6 +242,10 @@ export class GamePage {
 		return max;
 	}
 
+	
+	/*
+	 * AI
+	 */
 	minimizePlay(board: any, depth: number, alpha: number, beta: number): any {
 		var score = this.score(board[0]);
 
@@ -266,6 +276,12 @@ export class GamePage {
 		return min;
 	}
 
+	
+
+	/*
+	 * Switch player turn.
+	 *
+	 */
 	switchRound(round: number): number {
 		// 0 Human, 1 Computer
 		if (round == 0) {
@@ -275,26 +291,108 @@ export class GamePage {
 		}
 	}
 
+
+	/*
+	 * Clears the game board and resets status.
+	 *
+	 */
+	resetBoard(): void {
+		var game_board = new Array(this.rows);
+		for (var i = 0; i < game_board.length; i++) {
+			game_board[i] = new Array(this.columns);
+
+			for (var j = 0; j < game_board[i].length; j++) {
+				game_board[i][j] = null;
+				(<HTMLTableElement>document.getElementById('game_board')).rows[i].cells[j].className = 'empty';
+			}
+		}
+
+		this.board = game_board;
+		this.status = 0;
+	}
+
+
+	/*
+	 * Increment score when player wins.
+	 * No points for either if the game is tied.
+	 *
+	 */
+	updateWinScores(): void{
+		if(this.status == 1){
+			this.player1Wins += 1;
+		}
+		else if(this.status == 2){
+			this.player2Wins += 1;
+		}
+
+	}
+
+	/*
+	 * Decides what do to after a round is finished.
+	 * 1)Clear board for another round, 
+	 * or 
+	 * 2)Marks the winner of the game by checking player scores.
+	 * 
+	 */
+	updateRound(): void{
+
+		//If the round is over(win or tie)
+		if(this.status == 1 || this.status == 2 || this.status == 3){
+			//if there are still rounds to play, increment round counter
+			//and clear the game board.
+			if(this.currentRound < this.rounds){
+				this.currentRound += 1;
+				this.resetBoard();
+			}
+			//otherwise state the winner of the game.
+			else{
+				if(this.player1Wins > this.player2Wins){
+					this.winner = 1;
+				}
+				else if(this.player2Wins > this.player1Wins){
+					this.winner = 2;
+				}
+				else{
+					this.winner = 3;
+				}
+			}
+		}
+
+	}
+
+
+	/*
+	 * Status: 	0 - Running
+	 *		1 - Human wins    (Player 1)
+	 *		2 - Computer wins (Player 2)
+	 *		3 - Tie
+	 */
 	updateStatus(): void {
 		// Human won
 		if (this.score(this.board) == -this.ascore) {
 			this.status = 1;
 			this.markWin();
+
 			let score = this.user.setscore(this.player1, 1);
-			alert(this.player1 + " has won!\nNew high score of " + score + ".");
+			alert(this.player1 + " has won the round!\nNew high score of " + score + ".");
+			this.user.setscore(this.player1, 1);
+
 		}
 
 		// Computer won
 		if (this.score(this.board) == this.ascore) {
 			this.status = 2;
 			this.markWin();
-			let message = this.player2 + " has won!";
+
+			let message = this.player2 + " has won the round!";
 			if (this.opponent != 2)
+				this.user.setscore(this.player2, 1);
 			{
 				let score = this.user.setscore(this.player2, 1);
 				message += "\nNew high score of " + score + "."
 			}
 			alert(message);
+
 		}
 
 		// Tie
@@ -302,6 +400,7 @@ export class GamePage {
 			this.status = 3;
 			alert("Tie!");
 		}
+
 
 		var html = document.getElementById('status');
 		if (this.status == 0) {

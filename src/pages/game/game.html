@@ -14,12 +14,17 @@
 	<div class="box-left">
 		<h2 *ngIf="round == 0 && status == 0">{{player1}} ⚫</h2>
 		<h2 *ngIf="round == 1 && status == 0">{{player2}} 🔴</h2>
+		<h1 *ngIf="winner == 1"> {{player1}} Wins The Game</h1>
+		<h1 *ngIf="winner == 2"> {{player2}} Wins The Game</h1>
+		<h1 *ngIf="winner == 3"> Players tied! </h1>
 		<table id="game_board">
 			<tr *ngFor="let i of arows">
 				<td *ngFor="let j of acolumns" (click)="act($event)" class='empty'></td>
 			</tr>
 		</table> 
 		<div id="loading">The Computer is thinking…</div>
+		<p>Round: {{currentRound}} / {{rounds}}</p>
+		<h2 *ngIf="winner != 0">Final score: {{player1Wins}} - {{player2Wins}}</h2>
 		<p>Player 1 is <span class="human"><strong>Black</strong></span> ⚫ Player 2 is <span class="computer"><strong>Red</strong></span> 🔴</p>
 	</div>
 
