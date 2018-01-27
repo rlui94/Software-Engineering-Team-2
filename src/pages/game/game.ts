@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams } from 'ionic-angular';
+import { NavController, NavParams, AlertController } from 'ionic-angular';
 
 import { User } from './../../providers/user';
 
@@ -26,9 +26,10 @@ export class GamePage {
   currentRound: number = 1;
   player1Wins: number = 0; // Players score for the current game
   player2Wins: number = 0;
+  ties: number = 0;
   winner: number = 0;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, private user: User) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, public alertCtrl: AlertController, private user: User) {
     
   }
   
@@ -79,10 +80,10 @@ export class GamePage {
 		// Generate 'real' board
 		// Create 2-dimensional array
 		var game_board = new Array(this.rows);
-		for (var i = 0; i < game_board.length; i++) {
+		for (var i = 0; i < game_board.length; ++i) {
 			game_board[i] = new Array(this.columns);
 
-			for (var j = 0; j < game_board[i].length; j++) {
+			for (var j = 0; j < game_board[i].length; ++j) {
 				game_board[i][j] = null;
 			}
 		}
@@ -128,7 +129,7 @@ export class GamePage {
 		if (this.score(this.board) != this.ascore && this.score(this.board) != -this.ascore && !this.isFull(this.board)) {
 			var ay = 0;
 			
-			for (var y = this.rows - 1; y >= 0; y--) {
+			for (var y = this.rows - 1; y >= 0; --y) {
 				if ((<HTMLTableElement>document.getElementById('game_board')).rows[y].cells[column].className == 'empty') {
 					ay = y;
 					break;
@@ -165,7 +166,6 @@ export class GamePage {
 
 				this.round = this.switchRound(this.round);
 				this.updateStatus();
-				this.updateWinScores();
 				this.updateRound();
 			}
 		}, 50);
@@ -219,12 +219,12 @@ export class GamePage {
 		var max = [null, Number.MIN_SAFE_INTEGER];
 
 		// For all possible moves
-		for (var column = 0; column < this.columns; column++) {
+		for (var column = 0; column < this.columns; ++column) {
 			var new_board = this.copy(board[0], board[1]); // Create new board
 
 			if (this.boardplace(new_board[0], new_board[1], column)) {
 
-				this.iterations++; // Debug
+				++this.iterations; // Debug
 
 				var next_move = this.minimizePlay(new_board, depth - 1, alpha, beta); // Recursive calling
 
@@ -254,12 +254,12 @@ export class GamePage {
 		// Column, score
 		var min = [null, Number.MAX_SAFE_INTEGER];
 
-		for (var column = 0; column < this.columns; column++) {
+		for (var column = 0; column < this.columns; ++column) {
 			var new_board = this.copy(board[0], board[1]);
 
 			if (this.boardplace(new_board[0], new_board[1], column)) {
 
-				this.iterations++;
+				++this.iterations;
 
 				var next_move = this.maximizePlay(new_board, depth - 1, alpha, beta);
 
@@ -297,35 +297,28 @@ export class GamePage {
 	 *
 	 */
 	resetBoard(): void {
+		this.status = 0;
+		this.round = this.navParams.data.first;
+		
 		var game_board = new Array(this.rows);
-		for (var i = 0; i < game_board.length; i++) {
+		for (var i = 0; i < game_board.length; ++i) {
 			game_board[i] = new Array(this.columns);
 
-			for (var j = 0; j < game_board[i].length; j++) {
+			for (var j = 0; j < game_board[i].length; ++j) {
 				game_board[i][j] = null;
 				(<HTMLTableElement>document.getElementById('game_board')).rows[i].cells[j].className = 'empty';
 			}
 		}
 
 		this.board = game_board;
-		this.status = 0;
+		document.getElementById('ai-iterations').innerHTML = "?";
+		document.getElementById('ai-time').innerHTML = "?";
+		document.getElementById('ai-column').innerHTML = "Column: ?";
+		document.getElementById('ai-score').innerHTML = "Score: ?";
+		document.getElementById('game_board').className = "";
+		this.updateStatus();
 	}
 
-
-	/*
-	 * Increment score when player wins.
-	 * No points for either if the game is tied.
-	 *
-	 */
-	updateWinScores(): void{
-		if(this.status == 1){
-			this.player1Wins += 1;
-		}
-		else if(this.status == 2){
-			this.player2Wins += 1;
-		}
-
-	}
 
 	/*
 	 * Decides what do to after a round is finished.
@@ -341,8 +334,10 @@ export class GamePage {
 			//if there are still rounds to play, increment round counter
 			//and clear the game board.
 			if(this.currentRound < this.rounds){
-				this.currentRound += 1;
-				this.resetBoard();
+				setTimeout(() => {
+					++this.currentRound;
+					this.resetBoard();
+				}, 1000);
 			}
 			//otherwise state the winner of the game.
 			else{
@@ -372,33 +367,34 @@ export class GamePage {
 		if (this.score(this.board) == -this.ascore) {
 			this.status = 1;
 			this.markWin();
+			++this.player1Wins;
 
 			let score = this.user.setscore(this.player1, 1);
-			alert(this.player1 + " has won the round!\nNew high score of " + score + ".");
-			this.user.setscore(this.player1, 1);
-
+			this.showAlert(this.player1 + " has won round " + this.currentRound + "!", "New high score of " + score + ".");
 		}
 
 		// Computer won
 		if (this.score(this.board) == this.ascore) {
 			this.status = 2;
 			this.markWin();
+			++this.player2Wins;
 
-			let message = this.player2 + " has won the round!";
+			let title = this.player2 + " has won round " + this.currentRound + "!";
+			let message = "";
 			if (this.opponent != 2)
-				this.user.setscore(this.player2, 1);
 			{
 				let score = this.user.setscore(this.player2, 1);
-				message += "\nNew high score of " + score + "."
+				message = "New high score of " + score + "."
 			}
-			alert(message);
-
+			this.showAlert(title, message);
 		}
 
 		// Tie
 		if (this.isFull(this.board)) {
 			this.status = 3;
-			alert("Tie!");
+			++this.ties;
+			
+			this.showAlert("Tie!", "");
 		}
 
 
@@ -420,7 +416,7 @@ export class GamePage {
 
 	markWin(): void {
 		document.getElementById('game_board').className = "finished";
-		for (var i = 0; i < this.winning_array.length; i++) {
+		for (var i = 0; i < this.winning_array.length; ++i) {
 			var name = (<HTMLTableElement>document.getElementById('game_board')).rows[this.winning_array[i][0]].cells[this.winning_array[i][1]].className;
 			(<HTMLTableElement>document.getElementById('game_board')).rows[this.winning_array[i][0]].cells[this.winning_array[i][1]].className = name + " win";
 		}
@@ -451,7 +447,7 @@ export class GamePage {
 		// 1. not empty 2. not exceeding the board size
 		if (field[0][column] == null && column >= 0 && column < this.columns) {
 			// Bottom to top
-			for (var y = this.rows - 1; y >= 0; y--) {
+			for (var y = this.rows - 1; y >= 0; --y) {
 				if (field[y][column] == null) {
 					field[y][column] = player; // Set current player coin
 					break; // Break from loop after inserting
@@ -482,7 +478,7 @@ export class GamePage {
 		var winning_array_computer = [];
 
 		// Determine score through amount of available chips
-		for (var i = 0; i < 4; i++) {
+		for (var i = 0; i < 4; ++i) {
 			if (field[row][column] == 0) {
 				winning_array_human.push([row, column]);
 				human_points++; // Add for each human chip
@@ -540,9 +536,9 @@ export class GamePage {
 		// [ ][x][x][ ][ ][ ][ ] 4
 		// [ ][ ][x][ ][ ][ ][ ] 5
 		for (var row = 0; row < this.rows - 3; row++) {
-			// Für jede Column überprüfen
-			for (var column = 0; column < this.columns; column++) {
-				// Die Column bewerten und zu den Punkten hinzufügen
+			// FÃ¼r jede Column Ã¼berprÃ¼fen
+			for (var column = 0; column < this.columns; ++column) {
+				// Die Column bewerten und zu den Punkten hinzufÃ¼gen
 				var score = this.scorePosition(field, row, column, 1, 0);
 				if (score == this.ascore) return this.ascore;
 				if (score == -this.ascore) return -this.ascore;
@@ -562,7 +558,7 @@ export class GamePage {
 		// [ ][ ][ ][ ][ ][ ][ ] 4
 		// [ ][ ][ ][ ][ ][ ][ ] 5
 		for (var row = 0; row < this.rows; row++) {
-			for (var column = 0; column < this.columns - 3; column++) { 
+			for (var column = 0; column < this.columns - 3; ++column) { 
 				var score = this.scorePosition(field, row, column, 0, 1);   
 				if (score == this.ascore) return this.ascore;
 				if (score == -this.ascore) return -this.ascore;
@@ -583,7 +579,7 @@ export class GamePage {
 		// [ ][ ][ ][ ][ ][ ][ ] 4
 		// [ ][ ][ ][ ][ ][ ][ ] 5
 		for (var row = 0; row < this.rows - 3; row++) {
-			for (var column = 0; column < this.columns - 3; column++) {
+			for (var column = 0; column < this.columns - 3; ++column) {
 				var score = this.scorePosition(field, row, column, 1, 1);
 				if (score == this.ascore) return this.ascore;
 				if (score == -this.ascore) return -this.ascore;
@@ -602,7 +598,7 @@ export class GamePage {
 		// [ ][ ][ ][ ][ ][ ][ ] 4
 		// [ ][ ][ ][ ][ ][ ][ ] 5
 		for (var row = 3; row < this.rows; row++) {
-			for (var column = 0; column <= this.columns - 4; column++) {
+			for (var column = 0; column <= this.columns - 4; ++column) {
 				var score = this.scorePosition(field, row, column, -1, +1);
 				if (score == this.ascore) return this.ascore;
 				if (score == -this.ascore) return -this.ascore;
@@ -621,7 +617,7 @@ export class GamePage {
 	 * @return {boolean}
 	 */
 	isFull(field: any): boolean {
-		for (var i = 0; i < this.columns; i++) {
+		for (var i = 0; i < this.columns; ++i) {
 			if (field[0][i] == null) {
 				return false;
 			}
@@ -636,10 +632,19 @@ export class GamePage {
 	 */
 	copy(field: any, player: number): any {
 		var new_board = new Array();
-		for (var i = 0; i < field.length; i++) {
+		for (var i = 0; i < field.length; ++i) {
 			new_board.push(field[i].slice());
 		}
 		return [new_board, player];
+	}
+	
+	showAlert(title: string, message: string) {
+		let alert = this.alertCtrl.create({
+		  title: title,
+		  message: message,
+		  buttons: ['OK']
+		});
+		alert.present();
 	}
 
 }
