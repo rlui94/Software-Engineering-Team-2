@@ -16,33 +16,33 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 import { User } from '../providers/user';
 
 @NgModule({
-  declarations: [
-    MyApp,
-    HomePage,
-    GamePage,
-    ScoresPage,
-    SettingsPage,
-	PopoverPage
-  ],
-  imports: [
-    BrowserModule,
-    IonicModule.forRoot(MyApp),
-	IonicStorageModule.forRoot()
-  ],
-  bootstrap: [IonicApp],
-  entryComponents: [
-    MyApp,
-    HomePage,
-    GamePage,
-    ScoresPage,
-    SettingsPage,
-	PopoverPage
-  ],
-  providers: [
-    StatusBar,
-    SplashScreen,
-    {provide: ErrorHandler, useClass: IonicErrorHandler},
-	User
-  ]
+	declarations: [
+		MyApp,
+		HomePage,
+		GamePage,
+		ScoresPage,
+		SettingsPage,
+		PopoverPage
+	],
+	imports: [
+		BrowserModule,
+		IonicModule.forRoot(MyApp),
+		IonicStorageModule.forRoot()
+	],
+	bootstrap: [IonicApp],
+	entryComponents: [
+		MyApp,
+		HomePage,
+		GamePage,
+		ScoresPage,
+		SettingsPage,
+		PopoverPage
+	],
+	providers: [
+		StatusBar,
+		SplashScreen,
+		{ provide: ErrorHandler, useClass: IonicErrorHandler },
+		User
+	]
 })
-export class AppModule {}
+export class AppModule { }

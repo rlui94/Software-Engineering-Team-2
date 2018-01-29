@@ -4,71 +4,68 @@ import { NavController, NavParams, AlertController } from 'ionic-angular';
 import { User } from './../../providers/user';
 
 @Component({
-  selector: 'page-game',
-  templateUrl: 'game.html'
+	selector: 'page-game',
+	templateUrl: 'game.html'
 })
 export class GamePage {
-  rows: number = 8; // Height
-  arows: any = [];
-  columns: number = 10; // Width
-  acolumns: any = [];
-  status: number = 0; // 0: running, 1: won, 2: lost, 3: tie
-  depth: number = 4; // Search depth
-  ascore: number = 100000; // Win/loss score
-  round: number = 0; // 0: Human, 1: Computer
-  winning_array: number[] = []; // Winning (chips) array
-  iterations: number = 0; // Iteration count
-  opponent: number = 2;
-  board: any;
-  player1: string;
-  player2: string;
-  rounds: number = 1; // Number of rounds to play
-  currentRound: number = 1;
-  player1Wins: number = 0; // Players score for the current game
-  player2Wins: number = 0;
-  ties: number = 0;
-  winner: number = 0;
+	rows: number = 8; // Height
+	arows: any = [];
+	columns: number = 10; // Width
+	acolumns: any = [];
+	status: number = 0; // 0: running, 1: won, 2: lost, 3: tie
+	depth: number = 4; // Search depth
+	ascore: number = 100000; // Win/loss score
+	round: number = 0; // 0: Human, 1: Computer
+	winning_array: number[] = []; // Winning (chips) array
+	iterations: number = 0; // Iteration count
+	opponent: number = 2;
+	board: any;
+	player1: string;
+	player2: string;
+	rounds: number = 1; // Number of rounds to play
+	currentRound: number = 1;
+	player1Wins: number = 0; // Players score for the current game
+	player2Wins: number = 0;
+	ties: number = 0;
+	winner: number = 0;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public alertCtrl: AlertController, private user: User) {
-    
-  }
-  
-  ngOnInit() {
-    this.rounds = this.navParams.data.rounds;
-	
-	// Dropdown value
-	this.opponent = this.navParams.data.opponent;
-	var boardsize = this.navParams.data.size;
-	if (boardsize == 1)
-	{
-		this.rows = 6;
-		this.columns = 7;
-	}
-	else if (boardsize == 2)
-	{
-		this.rows = 7;
-		this.columns = 8;
-	}
-	else if (boardsize == 3)
-	{
-		this.rows = 8;
-		this.columns = 10;
-	}
-	this.arows = Array(this.rows);
-	this.acolumns = Array(this.columns);
-	this.status = 0;
-	this.round = this.navParams.data.first;
-	this.player1 = this.navParams.data.player1;
-	this.player2 = this.opponent == 2 ? "Computer" : this.navParams.data.player2;
-	this.init();
-	if (this.opponent != 2){
-		document.getElementById('debug').style.display = "none";
+	constructor(public navCtrl: NavController, public navParams: NavParams, public alertCtrl: AlertController, private user: User) {
+
 	}
 
-	this.updateStatus();
-	
-	this.init();
-  }
+	ngOnInit() {
+		this.rounds = this.navParams.data.rounds;
+
+		// Dropdown value
+		this.opponent = this.navParams.data.opponent;
+		var boardsize = this.navParams.data.size;
+		if (boardsize == 1) {
+			this.rows = 6;
+			this.columns = 7;
+		}
+		else if (boardsize == 2) {
+			this.rows = 7;
+			this.columns = 8;
+		}
+		else if (boardsize == 3) {
+			this.rows = 8;
+			this.columns = 10;
+		}
+		this.arows = Array(this.rows);
+		this.acolumns = Array(this.columns);
+		this.status = 0;
+		this.round = this.navParams.data.first;
+		this.player1 = this.navParams.data.player1;
+		this.player2 = this.opponent == 2 ? "Computer" : this.navParams.data.player2;
+		this.init();
+		if (this.opponent != 2) {
+			document.getElementById('debug').style.display = "none";
+		}
+
+		this.updateStatus();
+
+		this.init();
+	}
 
 
 
@@ -102,16 +99,14 @@ export class GamePage {
 	act(e: Event): void {
 		var element = e.target || window.event.srcElement;
 
-		if (this.opponent == 1)
-		{
+		if (this.opponent == 1) {
 			this.place((<HTMLTableCellElement>element).cellIndex);
 		}
-		else if (this.opponent == 2)
-		{
-			
+		else if (this.opponent == 2) {
+
 			// Human round
 			if (this.round == 0) this.place((<HTMLTableCellElement>element).cellIndex);
-			
+
 			setTimeout(() => {
 				// Computer round
 				if (this.round == 1) this.generateComputerDecision();
@@ -128,18 +123,18 @@ export class GamePage {
 		// If not finished
 		if (this.score(this.board) != this.ascore && this.score(this.board) != -this.ascore && !this.isFull(this.board)) {
 			var ay = 0;
-			
+
 			for (var y = this.rows - 1; y >= 0; --y) {
 				if ((<HTMLTableElement>document.getElementById('game_board')).rows[y].cells[column].className == 'empty') {
 					ay = y;
 					break;
 				}
 			}
-			
+
 			this.dropLoop(0, column, ay);
 		}
 	}
-	
+
 
 	/*
 	 * Puts disk in specific location(I think loop == disk)
@@ -147,19 +142,18 @@ export class GamePage {
 	 */
 	dropLoop(y: number, column: number, ay: number) {
 		setTimeout(() => {
-			if(y != 0)
-				(<HTMLTableElement>document.getElementById('game_board')).rows[y-1].cells[column].className = 'empty';
-			
+			if (y != 0)
+				(<HTMLTableElement>document.getElementById('game_board')).rows[y - 1].cells[column].className = 'empty';
+
 			if (this.round == 1) {
 				(<HTMLTableElement>document.getElementById('game_board')).rows[y].cells[column].className = 'coin computer-coin';
 			} else {
 				(<HTMLTableElement>document.getElementById('game_board')).rows[y].cells[column].className = 'coin human-coin';
 			}
-			
-			if(y < ay)
+
+			if (y < ay)
 				this.dropLoop(y + 1, column, ay);
-			else
-			{
+			else {
 				if (!this.boardplace(this.board, this.round, column)) {
 					return alert("Invalid move.");
 				}
@@ -242,7 +236,7 @@ export class GamePage {
 		return max;
 	}
 
-	
+
 	/*
 	 * AI
 	 */
@@ -276,7 +270,7 @@ export class GamePage {
 		return min;
 	}
 
-	
+
 
 	/*
 	 * Switch player turn.
@@ -299,7 +293,7 @@ export class GamePage {
 	resetBoard(): void {
 		this.status = 0;
 		this.round = this.navParams.data.first;
-		
+
 		var game_board = new Array(this.rows);
 		for (var i = 0; i < game_board.length; ++i) {
 			game_board[i] = new Array(this.columns);
@@ -327,27 +321,27 @@ export class GamePage {
 	 * 2)Marks the winner of the game by checking player scores.
 	 * 
 	 */
-	updateRound(): void{
+	updateRound(): void {
 
 		//If the round is over(win or tie)
-		if(this.status == 1 || this.status == 2 || this.status == 3){
+		if (this.status == 1 || this.status == 2 || this.status == 3) {
 			//if there are still rounds to play, increment round counter
 			//and clear the game board.
-			if(this.currentRound < this.rounds){
+			if (this.currentRound < this.rounds) {
 				setTimeout(() => {
 					++this.currentRound;
 					this.resetBoard();
 				}, 1000);
 			}
 			//otherwise state the winner of the game.
-			else{
-				if(this.player1Wins > this.player2Wins){
+			else {
+				if (this.player1Wins > this.player2Wins) {
 					this.winner = 1;
 				}
-				else if(this.player2Wins > this.player1Wins){
+				else if (this.player2Wins > this.player1Wins) {
 					this.winner = 2;
 				}
-				else{
+				else {
 					this.winner = 3;
 				}
 			}
@@ -381,8 +375,7 @@ export class GamePage {
 
 			let title = this.player2 + " has won round " + this.currentRound + "!";
 			let message = "";
-			if (this.opponent != 2)
-			{
+			if (this.opponent != 2) {
 				let score = this.user.setscore(this.player2, 1);
 				message = "New high score of " + score + "."
 			}
@@ -393,7 +386,7 @@ export class GamePage {
 		if (this.isFull(this.board)) {
 			this.status = 3;
 			++this.ties;
-			
+
 			this.showAlert("Tie!", "");
 		}
 
@@ -535,7 +528,7 @@ export class GamePage {
 		// [x][x][x][ ][ ][ ][ ] 3
 		// [ ][x][x][ ][ ][ ][ ] 4
 		// [ ][ ][x][ ][ ][ ][ ] 5
-		for (var row = 0; row < this.rows - 3; row++) {
+		for (var row = 0; row < this.rows - 3; ++row) {
 			// Für jede Column überprüfen
 			for (var column = 0; column < this.columns; ++column) {
 				// Die Column bewerten und zu den Punkten hinzufügen
@@ -543,7 +536,7 @@ export class GamePage {
 				if (score == this.ascore) return this.ascore;
 				if (score == -this.ascore) return -this.ascore;
 				vertical_points += score;
-			}			
+			}
 		}
 
 		// Horizontal points
@@ -557,13 +550,13 @@ export class GamePage {
 		// [ ][ ][ ][x][x][x][x] 3
 		// [ ][ ][ ][ ][ ][ ][ ] 4
 		// [ ][ ][ ][ ][ ][ ][ ] 5
-		for (var row = 0; row < this.rows; row++) {
-			for (var column = 0; column < this.columns - 3; ++column) { 
-				var score = this.scorePosition(field, row, column, 0, 1);   
+		for (var row = 0; row < this.rows; ++row) {
+			for (var column = 0; column < this.columns - 3; ++column) {
+				var score = this.scorePosition(field, row, column, 0, 1);
 				if (score == this.ascore) return this.ascore;
 				if (score == -this.ascore) return -this.ascore;
 				horizontal_points += score;
-			} 
+			}
 		}
 
 
@@ -578,13 +571,13 @@ export class GamePage {
 		// [ ][ ][ ][x][ ][ ][ ] 3
 		// [ ][ ][ ][ ][ ][ ][ ] 4
 		// [ ][ ][ ][ ][ ][ ][ ] 5
-		for (var row = 0; row < this.rows - 3; row++) {
+		for (var row = 0; row < this.rows - 3; ++row) {
 			for (var column = 0; column < this.columns - 3; ++column) {
 				var score = this.scorePosition(field, row, column, 1, 1);
 				if (score == this.ascore) return this.ascore;
 				if (score == -this.ascore) return -this.ascore;
 				diagonal_points1 += score;
-			}			
+			}
 		}
 
 		// Diagonal points 2 (right-bottom)
@@ -597,7 +590,7 @@ export class GamePage {
 		// [x][ ][ ][ ][ ][ ][ ] 3
 		// [ ][ ][ ][ ][ ][ ][ ] 4
 		// [ ][ ][ ][ ][ ][ ][ ] 5
-		for (var row = 3; row < this.rows; row++) {
+		for (var row = 3; row < this.rows; ++row) {
 			for (var column = 0; column <= this.columns - 4; ++column) {
 				var score = this.scorePosition(field, row, column, -1, +1);
 				if (score == this.ascore) return this.ascore;
@@ -637,12 +630,12 @@ export class GamePage {
 		}
 		return [new_board, player];
 	}
-	
+
 	showAlert(title: string, message: string) {
 		let alert = this.alertCtrl.create({
-		  title: title,
-		  message: message,
-		  buttons: ['OK']
+			title: title,
+			message: message,
+			buttons: ['OK']
 		});
 		alert.present();
 	}
