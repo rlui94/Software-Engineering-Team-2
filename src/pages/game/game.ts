@@ -28,6 +28,8 @@ export class GamePage {
 	player2Wins: number = 0;
 	ties: number = 0;
 	winner: number = 0;
+	selectedcolorplayer1: string = "#333333";
+	selectedcolorplayer2: string = "#DC143C";
 
 	constructor(public navCtrl: NavController, public navParams: NavParams, public alertCtrl: AlertController, private user: User) {
 
@@ -57,6 +59,8 @@ export class GamePage {
 		this.round = this.navParams.data.first;
 		this.player1 = this.navParams.data.player1;
 		this.player2 = this.opponent == 2 ? "Computer" : this.navParams.data.player2;
+		this.selectedcolorplayer1 = this.navParams.data.selectedcolorplayer1;
+		this.selectedcolorplayer2 = this.navParams.data.selectedcolorplayer2;
 		this.init();
 		if (this.opponent != 2) {
 			document.getElementById('debug').style.display = "none";
@@ -142,13 +146,17 @@ export class GamePage {
 	 */
 	dropLoop(y: number, column: number, ay: number) {
 		setTimeout(() => {
-			if (y != 0)
+			if (y != 0) {
 				(<HTMLTableElement>document.getElementById('game_board')).rows[y - 1].cells[column].className = 'empty';
+				(<HTMLTableElement>document.getElementById('game_board')).rows[y - 1].cells[column].style.background = '';
+			}
+
+			(<HTMLTableElement>document.getElementById('game_board')).rows[y].cells[column].className = 'coin';
 
 			if (this.round == 1) {
-				(<HTMLTableElement>document.getElementById('game_board')).rows[y].cells[column].className = 'coin computer-coin';
+				(<HTMLTableElement>document.getElementById('game_board')).rows[y].cells[column].style.background = this.selectedcolorplayer2;
 			} else {
-				(<HTMLTableElement>document.getElementById('game_board')).rows[y].cells[column].className = 'coin human-coin';
+				(<HTMLTableElement>document.getElementById('game_board')).rows[y].cells[column].style.background = this.selectedcolorplayer1;
 			}
 
 			if (y < ay)

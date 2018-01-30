@@ -33,9 +33,21 @@
 				<ion-input type="text" [(ngModel)]="player1" name="player1" pattern="[a-zA-Z0-9\- ]+" required></ion-input>
 			</ion-item>
 
+			<ion-item>
+				<ion-label *ngIf="formData.value.opponent == 1">Player 1's color:</ion-label>
+				<ion-label *ngIf="formData.value.opponent == 2">The Humans color:</ion-label>
+				<ion-input type="color" [(ngModel)]="selectedcolorplayer1" name="selectedcolorplayer1" value="#333333" required></ion-input>
+			</ion-item>
+
 			<ion-item *ngIf="formData.value.opponent == 1">
 				<ion-label floating>Player 2's name:</ion-label>
 				<ion-input type="text" [(ngModel)]="player2" name="player2" required></ion-input>
+			</ion-item>
+
+			<ion-item>
+				<ion-label *ngIf="formData.value.opponent == 1">Player 2's color:</ion-label>
+				<ion-label *ngIf="formData.value.opponent == 2">The Computers color:</ion-label>
+				<ion-input type="color" [(ngModel)]="selectedcolorplayer2" name="selectedcolorplayer2" value="#DC143C" required></ion-input>
 			</ion-item>
 
 			<ion-item>

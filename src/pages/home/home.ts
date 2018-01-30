@@ -16,6 +16,8 @@ export class HomePage {
 	size: number = 3;
 	first: number = 0;
 	rounds: number = 1;
+	selectedcolorplayer1: string = "#333333";
+	selectedcolorplayer2: string = "#DC143C";
 
 	constructor(public navCtrl: NavController, private user: User) {
 
@@ -28,7 +30,9 @@ export class HomePage {
 			player2: this.player2,
 			size: this.size,
 			first: this.first,
-			rounds: this.rounds
+			rounds: this.rounds,
+			selectedcolorplayer1: this.selectedcolorplayer1,
+			selectedcolorplayer2: this.selectedcolorplayer2
 		});
 	}
 

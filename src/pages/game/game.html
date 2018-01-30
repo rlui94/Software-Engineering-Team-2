@@ -12,8 +12,12 @@
 
 <ion-content>
 	<div class="box-left">
-		<h2 *ngIf="round == 0 && status == 0">{{player1}} ⚫</h2>
-		<h2 *ngIf="round == 1 && status == 0">{{player2}} 🔴</h2>
+		<h2 *ngIf="round == 0 && status == 0">{{player1}}
+			<span [style.color]="selectedcolorplayer1">●</span>
+		</h2>
+		<h2 *ngIf="round == 1 && status == 0">{{player2}}
+			<span [style.color]="selectedcolorplayer2">●</span>
+		</h2>
 		<h2 *ngIf="winner == 1">{{player1}} won the game!</h2>
 		<h2 *ngIf="winner == 2">{{player2}} won the game!</h2>
 		<h2 *ngIf="winner == 3">Tied!</h2>
@@ -26,12 +30,13 @@
 		<div id="loading">The Computer is thinking…</div>
 		<h3 *ngIf="rounds > 1">Score: {{player1Wins}} - {{player2Wins}} - {{ties}}</h3>
 		<p>Player 1 is
-			<span class="human">
-				<strong>Black</strong>
-			</span> ⚫ Player 2 is
-			<span class="computer">
-				<strong>Red</strong>
-			</span> 🔴</p>
+			<span [style.color]="selectedcolorplayer1">
+				<strong>●</strong>
+			</span> Player 2 is
+			<span [style.color]="selectedcolorplayer2">
+				<strong>●</strong>
+			</span>
+		</p>
 	</div>
 
 	<div class="box-right">
