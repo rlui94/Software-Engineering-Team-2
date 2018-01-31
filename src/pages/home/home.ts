@@ -16,19 +16,19 @@ export class HomePage {
 	size: number = 3;
 	first: number = 0;
 	rounds: number = 1;
-	selectedcolorplayer1: string = "#333333";
-	selectedcolorplayer2: string = "#DC143C";
-	gameCode: string;
+	selectedcolorplayer1: string = "#FFFF00";
+	selectedcolorplayer2: string = "#FF0000";
+	gameCode: string = "";
 
 	constructor(public navCtrl: NavController, private user: User) {
 
 	}
 
 	onSubmit(formData) {
-		//if(this.opponent == 3){
-		//	this.comingSoon();
-		//	return;
-		//}
+		if (this.opponent == 3 || this.opponent == 4) {
+			return;
+		}
+
 		this.navCtrl.push(GamePage, {
 			opponent: this.opponent,
 			player1: this.player1,
@@ -40,10 +40,6 @@ export class HomePage {
 			selectedcolorplayer2: this.selectedcolorplayer2,
 			gameCode: this.gameCode,
 		});
-	}
-
-	comingSoon(): void{
-		alert("This feature is coming soon.");
 	}
 
 }

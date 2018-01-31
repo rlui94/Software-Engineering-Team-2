@@ -28,9 +28,9 @@ export class GamePage {
 	player2Wins: number = 0;
 	ties: number = 0;
 	winner: number = 0;
-	selectedcolorplayer1: string = "#333333";
-	selectedcolorplayer2: string = "#DC143C";
-	gameCode: string;
+	selectedcolorplayer1: string = "#FFFF00";
+	selectedcolorplayer2: string = "#FF0000";
+	gameCode: string = "";
 
 	constructor(public navCtrl: NavController, public navParams: NavParams, public alertCtrl: AlertController, private user: User) {
 
@@ -62,10 +62,7 @@ export class GamePage {
 		this.player2 = this.opponent == 2 ? "Computer" : this.navParams.data.player2;
 		this.selectedcolorplayer1 = this.navParams.data.selectedcolorplayer1;
 		this.selectedcolorplayer2 = this.navParams.data.selectedcolorplayer2;
-		if(this.opponent == 1 || this.opponent == 2){
-			this.gameCode = "thereisnocode";
-		}
-		else{
+		if (this.opponent == 3 || this.opponent == 4) {
 			this.gameCode = this.navParams.data.gameCode;
 		}
 
@@ -317,6 +314,7 @@ export class GamePage {
 			for (var j = 0; j < game_board[i].length; ++j) {
 				game_board[i][j] = null;
 				(<HTMLTableElement>document.getElementById('game_board')).rows[i].cells[j].className = 'empty';
+				(<HTMLTableElement>document.getElementById('game_board')).rows[i].cells[j].style.background = '';
 			}
 		}
 
