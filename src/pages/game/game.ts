@@ -8,28 +8,29 @@ import { User } from './../../providers/user';
 	templateUrl: 'game.html'
 })
 export class GamePage {
-	rows: number = 8; // Height
+	rows: number = 8; 	// Height
 	arows: any = [];
-	columns: number = 10; // Width
+	columns: number = 10; 	// Width
 	acolumns: any = [];
-	status: number = 0; // 0: running, 1: won, 2: lost, 3: tie
-	depth: number = 4; // Search depth
-	ascore: number = 100000; // Win/loss score
-	round: number = 0; // 0: Human, 1: Computer
+	status: number = 0; 	// 0: running, 1: won, 2: lost, 3: tie
+	depth: number = 4; 	// Search depth
+	ascore: number = 100000;// Win/loss score
+	round: number = 0; 	// 0: Human, 1: Computer
 	winning_array: number[] = []; // Winning (chips) array
 	iterations: number = 0; // Iteration count
 	opponent: number = 2;
 	board: any;
 	player1: string;
 	player2: string;
-	rounds: number = 1; // Number of rounds to play
+	rounds: number = 1; 	// Number of rounds to play
 	currentRound: number = 1;
-	player1Wins: number = 0; // Players score for the current game
+	player1Wins: number = 0;// Players score for the current game
 	player2Wins: number = 0;
 	ties: number = 0;
 	winner: number = 0;
 	selectedcolorplayer1: string = "#333333";
 	selectedcolorplayer2: string = "#DC143C";
+	gameCode: string;
 
 	constructor(public navCtrl: NavController, public navParams: NavParams, public alertCtrl: AlertController, private user: User) {
 
@@ -61,14 +62,21 @@ export class GamePage {
 		this.player2 = this.opponent == 2 ? "Computer" : this.navParams.data.player2;
 		this.selectedcolorplayer1 = this.navParams.data.selectedcolorplayer1;
 		this.selectedcolorplayer2 = this.navParams.data.selectedcolorplayer2;
-		this.init();
+		if(this.opponent == 1 || this.opponent == 2){
+			this.gameCode = "thereisnocode";
+		}
+		else{
+			this.gameCode = this.navParams.data.gameCode;
+		}
+
+		this.initBoard();
 		if (this.opponent != 2) {
 			document.getElementById('debug').style.display = "none";
 		}
 
 		this.updateStatus();
 
-		this.init();
+		this.initBoard();
 	}
 
 
@@ -77,7 +85,7 @@ export class GamePage {
 	 * Create initial game board
 	 *
 	 */
-	init(): void {
+	initBoard(): void {
 		// Generate 'real' board
 		// Create 2-dimensional array
 		var game_board = new Array(this.rows);
