@@ -40,34 +40,37 @@
 				<ion-input type="text" [(ngModel)]="gameCode" name="gameCode" pattern="[a-zA-Z0-9]+" required></ion-input>
 			</ion-item>
 
+			<ion-list-header *ngIf="formData.value.opponent == 1">Player 1</ion-list-header>
+			<ion-list-header *ngIf="formData.value.opponent == 2">The Human</ion-list-header>
+			<ion-list-header *ngIf="formData.value.opponent == 3 || formData.value.opponent  == 4">You</ion-list-header>
+
 			<ion-item>
-				<ion-label *ngIf="formData.value.opponent == 1" floating>Player 1's name:</ion-label>
-				<ion-label *ngIf="formData.value.opponent == 2" floating>The Humans name:</ion-label>
-				<ion-label *ngIf="formData.value.opponent == 3 || formData.value.opponent  == 4" floating>Your name:</ion-label>
+				<ion-label floating>Name:</ion-label>
 				<ion-input type="text" [(ngModel)]="player1" name="player1" pattern="[a-zA-Z0-9\- ]+" required></ion-input>
 			</ion-item>
 
-
 			<ion-item>
-				<ion-label *ngIf="formData.value.opponent == 1">Player 1's color:</ion-label>
-				<ion-label *ngIf="formData.value.opponent == 2">The Humans color:</ion-label>
-				<ion-label *ngIf="formData.value.opponent == 3 || formData.value.opponent == 4">Your color:</ion-label>
+				<ion-label>Color:</ion-label>
 				<ion-input type="color" [(ngModel)]="selectedcolorplayer1" name="selectedcolorplayer1" value="#FFFF00" required></ion-input>
 			</ion-item>
 
+			<br>
+
+			<ion-list-header *ngIf="formData.value.opponent == 1">Player 2</ion-list-header>
+			<ion-list-header *ngIf="formData.value.opponent == 2">The Computer</ion-list-header>
+			<ion-list-header *ngIf="formData.value.opponent == 3 || formData.value.opponent == 4">Your Opponent</ion-list-header>
+
 			<ion-item *ngIf="formData.value.opponent == 1">
-				<ion-label floating>Player 2's name:</ion-label>
+				<ion-label floating>Name:</ion-label>
 				<ion-input type="text" [(ngModel)]="player2" name="player2" required></ion-input>
 			</ion-item>
 
-
-
 			<ion-item>
-				<ion-label *ngIf="formData.value.opponent == 1">Player 2's color:</ion-label>
-				<ion-label *ngIf="formData.value.opponent == 2">The Computers color:</ion-label>
-				<ion-label *ngIf="formData.value.opponent == 3 || formData.value.opponent == 4">Your Opponent's color:</ion-label>
+				<ion-label>Color:</ion-label>
 				<ion-input type="color" [(ngModel)]="selectedcolorplayer2" name="selectedcolorplayer2" value="#FF0000" required></ion-input>
 			</ion-item>
+
+			<br>
 
 			<ion-item *ngIf="formData.value.opponent != 4">
 				<ion-label stacked>Board size:</ion-label>

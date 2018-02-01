@@ -25,10 +25,6 @@ export class HomePage {
 	}
 
 	onSubmit(formData) {
-		if (this.opponent == 3 || this.opponent == 4) {
-			return;
-		}
-
 		this.navCtrl.push(GamePage, {
 			opponent: this.opponent,
 			player1: this.player1,

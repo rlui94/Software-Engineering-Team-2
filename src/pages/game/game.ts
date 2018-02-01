@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { NavController, NavParams, AlertController } from 'ionic-angular';
+import Peer from 'peerjs';
 
 import { User } from './../../providers/user';
 
@@ -31,49 +32,218 @@ export class GamePage {
 	selectedcolorplayer1: string = "#FFFF00";
 	selectedcolorplayer2: string = "#FF0000";
 	gameCode: string = "";
+	peer: any;
+	conn: any;
+	apikey: string = "em7dcs9izcjo47vi";
 
 	constructor(public navCtrl: NavController, public navParams: NavParams, public alertCtrl: AlertController, private user: User) {
 
 	}
 
 	ngOnInit() {
-		this.rounds = this.navParams.data.rounds;
-
-		// Dropdown value
 		this.opponent = this.navParams.data.opponent;
-		var boardsize = this.navParams.data.size;
-		if (boardsize == 1) {
-			this.rows = 6;
-			this.columns = 7;
-		}
-		else if (boardsize == 2) {
-			this.rows = 7;
-			this.columns = 8;
-		}
-		else if (boardsize == 3) {
-			this.rows = 8;
-			this.columns = 10;
-		}
-		this.arows = Array(this.rows);
-		this.acolumns = Array(this.columns);
-		this.status = 0;
-		this.round = this.navParams.data.first;
 		this.player1 = this.navParams.data.player1;
-		this.player2 = this.opponent == 2 ? "Computer" : this.navParams.data.player2;
 		this.selectedcolorplayer1 = this.navParams.data.selectedcolorplayer1;
 		this.selectedcolorplayer2 = this.navParams.data.selectedcolorplayer2;
-		if (this.opponent == 3 || this.opponent == 4) {
+		this.status = 0;
+
+		if (this.opponent == 4) {
 			this.gameCode = this.navParams.data.gameCode;
+
+			this.peer = new Peer({ key: this.apikey });
+
+			this.conn = this.peer.connect(this.gameCode);
+			this.conn.on('data', (data: any) => { this.recieve(data); });
+			this.conn.on('error', (err: any) => { this.error(err); });
+			this.conn.on('disconnected', () => { this.disconnected(); });
+			this.conn.on('open', (id) => {
+				this.send({
+					version: 1,
+					type: 2,
+					player: this.player1
+				});
+			});
+		}
+		else {
+			this.rounds = this.navParams.data.rounds;
+
+			// Dropdown value
+			var boardsize = this.navParams.data.size;
+			if (boardsize == 1) {
+				this.rows = 6;
+				this.columns = 7;
+			}
+			else if (boardsize == 2) {
+				this.rows = 7;
+				this.columns = 8;
+			}
+			else if (boardsize == 3) {
+				this.rows = 8;
+				this.columns = 10;
+			}
+			this.arows = Array(this.rows);
+			this.acolumns = Array(this.columns);
+			this.round = this.navParams.data.first;
+			if (this.opponent == 3) {
+				this.gameCode = Math.random().toString(36).substr(2, 4);
+
+				let prompt = this.alertCtrl.create({
+					title: 'Human vs Human (Online)',
+					message: "Please share this game code with your opponent:",
+					inputs: [
+						{
+							type: 'text',
+							name: 'gameCode',
+							value: this.gameCode,
+						}
+					],
+					buttons: [
+						{
+							text: 'Cancel',
+							role: 'cancel',
+							handler: data => {
+								//console.log('Cancel clicked');
+
+								this.navCtrl.pop();
+							}
+						},
+						{
+							text: 'OK',
+							handler: data => {
+								//console.log(data);
+
+
+							}
+						}
+					]
+				});
+				prompt.present();
+
+				this.peer = new Peer(this.gameCode, { key: this.apikey });
+
+				this.peer.on('connection', (conn) => {
+					this.conn = conn;
+					this.send({
+						version: 1,
+						type: 1,
+						player: this.player1,
+						size: boardsize,
+						first: this.round,
+						rounds: this.rounds
+					});
+					this.conn.on('data', (data: any) => { this.recieve(data); });
+					this.conn.on('error', (err: any) => { this.error(err); });
+					this.conn.on('disconnected', () => { this.disconnected(); });
+				});
+
+
+			}
+			else {
+				this.player2 = this.opponent == 2 ? "Computer" : this.navParams.data.player2;
+
+				this.initBoard();
+
+				this.updateStatus();
+
+				this.initBoard();
+			}
 		}
 
-		this.initBoard();
 		if (this.opponent != 2) {
 			document.getElementById('debug').style.display = "none";
 		}
+	}
 
-		this.updateStatus();
+	send(data: any) {
+		console.log(data);
 
-		this.initBoard();
+		this.conn.send(data);
+	}
+
+	recieve(data: any) {
+		console.log(data);
+
+		if (data.version == 1) {
+			if (data.type == 1) {
+				this.rounds = data.rounds;
+
+				var boardsize = data.size;
+				let size = "";
+				if (boardsize == 1) {
+					this.rows = 6;
+					this.columns = 7;
+					size = "7 × 6";
+				}
+				else if (boardsize == 2) {
+					this.rows = 7;
+					this.columns = 8;
+					size = "8 × 7";
+				}
+				else if (boardsize == 3) {
+					this.rows = 8;
+					this.columns = 10;
+					size = "10 × 8";
+				}
+				this.arows = Array(this.rows);
+				this.acolumns = Array(this.columns);
+				this.round = data.first;
+				let first = this.round ? "Opponent" : "You";
+				this.player2 = data.player;
+
+				this.initBoard();
+
+				this.updateStatus();
+
+				this.initBoard();
+
+				let prompt = this.alertCtrl.create({
+					title: 'Human vs Human (Online)',
+					subTitle: "Please accept or decline the request:",
+					message: "Your Opponent:\t" + this.player2 + "<br>Board size:\t" + size + "<br>Player going first:\t" + first + "<br>Number of rounds:\t" + this.rounds,
+					buttons: [
+						{
+							text: 'Decline',
+							role: 'cancel',
+							handler: data => {
+								//console.log('Cancel clicked');
+
+								this.navCtrl.pop();
+							}
+						},
+						{
+							text: 'Accept',
+							handler: data => {
+								//console.log(data);
+
+
+							}
+						}
+					]
+				});
+				prompt.present();
+			}
+			else if (data.type == 2) {
+				this.player2 = data.player;
+
+				this.initBoard();
+
+				this.updateStatus();
+
+				this.initBoard();
+			}
+			else if (data.type == 3) {
+				this.place(data.column);
+			}
+		}
+	}
+
+	error(err: any) {
+		console.error(err);
+		alert("An error occurred: " + JSON.stringify(err) + ".");
+	}
+
+	disconnected() {
+		this.peer.reconnect();
 	}
 
 
@@ -120,6 +290,17 @@ export class GamePage {
 				// Computer round
 				if (this.round == 1) this.generateComputerDecision();
 			}, 1000);
+		}
+		else if (this.opponent == 3 || this.opponent == 4) {
+			let column = (<HTMLTableCellElement>element).cellIndex;
+
+			this.place(column);
+
+			this.send({
+				version: 1,
+				type: 3,
+				column: column
+			});
 		}
 	}
 
@@ -358,6 +539,9 @@ export class GamePage {
 				else {
 					this.winner = 3;
 				}
+
+				if (this.opponent == 3 || this.opponent == 4)
+					this.peer.destroy();
 			}
 		}
 
