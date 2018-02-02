@@ -37,7 +37,7 @@
 
 			<ion-item *ngIf="formData.value.opponent == 4">
 				<ion-label floating>Game Code:</ion-label>
-				<ion-input type="text" [(ngModel)]="gameCode" name="gameCode" pattern="[a-zA-Z0-9]+" required></ion-input>
+				<ion-input type="text" [(ngModel)]="gameCode" name="gameCode" autocapitalize="off" pattern="[a-z0-9]+" required></ion-input>
 			</ion-item>
 
 			<ion-list-header *ngIf="formData.value.opponent == 1">Player 1</ion-list-header>

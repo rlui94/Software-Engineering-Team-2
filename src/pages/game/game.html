@@ -27,7 +27,7 @@
 				<td *ngFor="let j of acolumns" (click)="act($event)" class='empty'></td>
 			</tr>
 		</table>
-		<div id="loading">The Computer is thinking…</div>
+		<div id="loading">The Computer is thinking&hellip;</div>
 		<h3 *ngIf="rounds > 1">Score: {{player1Wins}} - {{player2Wins}} - {{ties}}</h3>
 		<p>Player 1 is
 			<span [style.color]="selectedcolorplayer1">

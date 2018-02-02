@@ -38,7 +38,7 @@ export class User {
 			if (a.score == b.score)
 				return a.player.localeCompare(b.player);
 			else
-				return a.score - b.score;
+				return b.score - a.score;
 		});
 
 		this.storage.set('scores', this.scores);
