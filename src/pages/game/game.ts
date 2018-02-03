@@ -60,18 +60,17 @@ export class GamePage {
 			this.loader.present();
 
 			this.peer = new Peer({ key: this.apikey/*, debug: 3*/ });
+			
+			this.peer.on('open', (id) => { });
+			this.peer.on('error', (err: any) => { this.error(err); });
 
 			this.conn = this.peer.connect(this.gameCode);
 			this.conn.on('data', (data: any) => { this.recieve(data); });
 			this.conn.on('error', (err: any) => { this.error(err); });
-			this.conn.on('disconnected', () => { this.disconnected(); });
-			this.conn.on('open', (id) => {
+			this.conn.on('close', () => { this.close(); });
+			this.conn.on('open', () => {
 				this.connected = true;
-				this.send({
-					version: 1,
-					type: 2,
-					player: this.player1
-				});
+				this.user.presentToast(this.player2 ? this.player2 : "Your opponent" + " has connected.");
 			});
 		}
 		else {
@@ -131,28 +130,32 @@ export class GamePage {
 				prompt.present();
 
 				this.peer = new Peer(this.gameCode, { key: this.apikey/*, debug: 3*/ });
+				
+				this.peer.on('open', (id) => { });
+				this.peer.on('error', (err: any) => { this.error(err); });
 
 				this.peer.on('connection', (conn) => {
 					if (this.connected == false) {
 						this.conn = conn;
-						this.conn.on('open', (id) => {
-							if (this.connected == false) {
-								this.connected = true;
-								this.send({
-									version: 1,
-									type: 1,
-									player: this.player1,
-									size: boardsize,
-									first: this.first,
-									rounds: this.rounds
-								});
-							}
+						this.conn.on('open', () => {
+							this.connected = true;
+							this.send({
+								version: 1,
+								type: 1,
+								player: this.player1,
+								size: boardsize,
+								first: this.first,
+								rounds: this.rounds
+							});
 							this.user.presentToast(this.player2 ? this.player2 : "Your opponent" + " has connected.");
 						});
 
 						this.conn.on('data', (data: any) => { this.recieve(data); });
 						this.conn.on('error', (err: any) => { this.error(err); });
-						this.conn.on('disconnected', () => { this.disconnected(); });
+						this.conn.on('close', () => { this.close(); });
+					}
+					else {
+						conn.close();
 					}
 				});
 			}
@@ -242,7 +245,11 @@ export class GamePage {
 							handler: data => {
 								//console.log(data);
 
-
+								this.send({
+									version: 1,
+									type: 2,
+									player: this.player1
+								});
 							}
 						}
 					]
@@ -270,10 +277,10 @@ export class GamePage {
 		console.error(err);
 		alert("An error occurred: " + JSON.stringify(err) + ".");
 	}
-
-	disconnected() {
+	
+	close() {
+		this.connected = false;
 		this.user.presentToast(this.player2 + " has disconnected.");
-		this.peer.reconnect();
 	}
 
 
@@ -348,7 +355,7 @@ export class GamePage {
 			this.dropLoop(0, column, ay);
 
 			if (this.opponent == 3 || this.opponent == 4) {
-				if (this.round == 0) {
+				if (this.round == 0 && this.connected) {
 					this.send({
 						version: 1,
 						type: 3,

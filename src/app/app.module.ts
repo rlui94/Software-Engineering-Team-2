@@ -12,8 +12,11 @@ import { PopoverPage } from '../pages/scores/popover';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
+import { Network } from '@ionic-native/network';
+import { Diagnostic } from '@ionic-native/diagnostic'
 
 import { User } from '../providers/user';
+import { NetworkService } from '../providers/network-service';
 
 @NgModule({
 	declarations: [
@@ -41,8 +44,11 @@ import { User } from '../providers/user';
 	providers: [
 		StatusBar,
 		SplashScreen,
+		Network,
+		Diagnostic,
 		{ provide: ErrorHandler, useClass: IonicErrorHandler },
-		User
+		User,
+		NetworkService
 	]
 })
 export class AppModule { }
