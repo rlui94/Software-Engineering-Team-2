@@ -11,5 +11,9 @@
 </ion-header>
 
 <ion-content>
-
+	<ion-item>
+		<ion-label>Gameboard Color</ion-label>
+		<ion-input type="color" [(ngModel)]="gameboard_color" name="gameboard_color" value="#0066FF" (ionChange)="updateGameboardColor()"></ion-input>
+	</ion-item>
 </ion-content>
+

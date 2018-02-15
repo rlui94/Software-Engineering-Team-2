@@ -2,8 +2,13 @@ import { Injectable } from '@angular/core';
 import { ToastController, AlertController } from 'ionic-angular';
 import { Storage } from '@ionic/storage';
 
+let defaultSettings = {
+	gameboardColor: "#0066FF",
+};
+
 @Injectable()
 export class User {
+	userSettings: any;
 	scores: Array<{ player: string, score: number }> = [];
 
 	constructor(public storage: Storage, private toastCtrl: ToastController, public alertCtrl: AlertController) {
@@ -14,6 +19,34 @@ export class User {
 				this.scores = scores;
 			}
 		});
+
+		storage.get('userSettings').then(settings => {
+			if (settings == null) {
+				this.userSettings = defaultSettings;
+				storage.set('userSettings', this.userSettings);
+			}
+			else {
+				this.userSettings = settings;
+				this.setDefaultBoardColor();
+			}
+		});
+	}
+
+	setDefaultBoardColor() {
+		this.changeSetting('gameboardColor', "#0066FF");
+	}
+
+	getGameboardColor() {
+		return this.userSettings.gameboardColor;
+	}
+
+	getSettings() {
+		return this.userSettings;
+	}
+
+	changeSetting(settingName: string, value: any) {
+		this.userSettings[settingName] = value;
+		this.storage.set('userSettings', this.userSettings);
 	}
 
 	getscores() {

@@ -22,7 +22,7 @@
 		<h2 *ngIf="winner == 2">{{player2}} won the game!</h2>
 		<h2 *ngIf="winner == 3">Tied!</h2>
 		<p>Round: {{currentRound}} / {{rounds}}</p>
-		<table id="game_board">
+		<table id="game_board" [style.background]="gameboardColor">
 			<tr *ngFor="let i of arows">
 				<td *ngFor="let j of acolumns" (click)="act($event)" class='empty'></td>
 			</tr>
@@ -57,3 +57,4 @@
 		</div>
 	</div>
 </ion-content>
+

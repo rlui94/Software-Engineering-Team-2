@@ -38,6 +38,7 @@ export class GamePage {
 	connected: boolean = false;
 	loader: any;
 	apikey: string = "em7dcs9izcjo47vi";
+	gameboardColor: string = "#0066FF";
 
 	constructor(public navCtrl: NavController, public navParams: NavParams, public alertCtrl: AlertController, public loading: LoadingController, private user: User) {
 
@@ -48,6 +49,7 @@ export class GamePage {
 		this.player1 = this.navParams.data.player1;
 		this.selectedcolorplayer1 = this.navParams.data.selectedcolorplayer1;
 		this.selectedcolorplayer2 = this.navParams.data.selectedcolorplayer2;
+		this.gameboardColor = this.user.getGameboardColor();
 		this.status = 0;
 
 		this.loader = this.loading.create({

@@ -8,9 +8,16 @@ import { User } from './../../providers/user';
 	templateUrl: 'settings.html'
 })
 export class SettingsPage {
-
+	gameboard_color: string;
 
 	constructor(public navCtrl: NavController, public navParams: NavParams, private user: User) {
+	}
 
+	ngOnInit() {
+		this.gameboard_color = this.user.getGameboardColor();
+	}
+
+	updateGameboardColor() {
+		this.user.changeSetting('gameboardColor', this.gameboard_color);
 	}
 }
