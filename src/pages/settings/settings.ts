@@ -13,9 +13,8 @@ export class SettingsPage {
 	constructor(public navCtrl: NavController, public navParams: NavParams, private user: User) {
 	}
 
-	getGameboardColor() {
-		return this.gameboard_color;
-		//return this.user.getGameboardColor();
+	ngOnInit() {
+		this.gameboard_color = this.user.getGameboardColor();
 	}
 
 	updateGameboardColor() {

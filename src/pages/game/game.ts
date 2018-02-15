@@ -183,10 +183,6 @@ export class GamePage {
 				this.peer.destroy();
 	}
 
-	changeGameboardColor(): any {
-		return { 'background-color': this.gameboardColor };
-	}
-
 	send(data: any) {
 		console.log(data);
 

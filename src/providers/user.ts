@@ -27,8 +27,13 @@ export class User {
 			}
 			else {
 				this.userSettings = settings;
+				this.setDefaultBoardColor();
 			}
 		});
+	}
+
+	setDefaultBoardColor() {
+		this.changeSetting('gameboardColor', "#0066FF");
 	}
 
 	getGameboardColor() {
