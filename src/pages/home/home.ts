@@ -14,6 +14,7 @@ export class HomePage {
 	opponent: number = 2;
 	player1: string;
 	player2: string;
+	depth: string = '4';
 	size: number = 3;
 	first: number = 0;
 	rounds: number = 1;
@@ -35,6 +36,7 @@ export class HomePage {
 			opponent: this.opponent,
 			player1: this.player1,
 			player2: this.player2,
+			depth: parseInt(this.depth),
 			size: this.size,
 			first: this.first,
 			rounds: this.rounds,

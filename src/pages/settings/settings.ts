@@ -8,7 +8,7 @@ import { User } from './../../providers/user';
 	templateUrl: 'settings.html'
 })
 export class SettingsPage {
-	gameboard_color: string;
+	gameboard_color: string = "#0066FF";
 
 	constructor(public navCtrl: NavController, public navParams: NavParams, private user: User) {
 	}

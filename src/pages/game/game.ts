@@ -33,12 +33,15 @@ export class GamePage {
 	selectedcolorplayer1: string = "#FFFF00";
 	selectedcolorplayer2: string = "#FF0000";
 	gameCode: string = "";
+	gameboardColor: string = "#0066FF";
 	peer: any;
 	conn: any;
 	connected: boolean = false;
 	loader: any;
-	apikey: string = "em7dcs9izcjo47vi";
-	gameboardColor: string = "#0066FF";
+	//apikey: string = "em7dcs9izcjo47vi";
+	host: string = "arteegee.herokuapp.com";
+	port: number = 443;
+	path: string = '/peerjs';
 
 	constructor(public navCtrl: NavController, public navParams: NavParams, public alertCtrl: AlertController, public loading: LoadingController, private user: User) {
 
@@ -47,6 +50,7 @@ export class GamePage {
 	ngOnInit() {
 		this.opponent = this.navParams.data.opponent;
 		this.player1 = this.navParams.data.player1;
+		this.depth = this.navParams.data.depth;
 		this.selectedcolorplayer1 = this.navParams.data.selectedcolorplayer1;
 		this.selectedcolorplayer2 = this.navParams.data.selectedcolorplayer2;
 		this.gameboardColor = this.user.getGameboardColor();
@@ -61,8 +65,16 @@ export class GamePage {
 
 			this.loader.present();
 
-			this.peer = new Peer({ key: this.apikey/*, debug: 3*/ });
-			
+			this.peer = new Peer({
+				host: this.host,
+				port: this.port,
+				path: this.path,
+				secure: true/*,
+				debug: 3*/
+			});
+
+			this.ping();
+
 			this.peer.on('open', (id) => { });
 			this.peer.on('error', (err: any) => { this.error(err); });
 
@@ -131,8 +143,16 @@ export class GamePage {
 				});
 				prompt.present();
 
-				this.peer = new Peer(this.gameCode, { key: this.apikey/*, debug: 3*/ });
-				
+				this.peer = new Peer(this.gameCode, {
+					host: this.host,
+					port: this.port,
+					path: this.path,
+					secure: true/*,
+					debug: 3*/
+				});
+
+				this.ping();
+
 				this.peer.on('open', (id) => { });
 				this.peer.on('error', (err: any) => { this.error(err); });
 
@@ -183,14 +203,22 @@ export class GamePage {
 				this.peer.destroy();
 	}
 
+	ping() {
+		//console.log(this.peer);
+		this.peer.socket.send({
+			type: 'ping'
+		});
+		setTimeout(() => { this.ping(); }, 16000);
+	}
+
 	send(data: any) {
-		console.log(data);
+		//console.log(data);
 
 		this.conn.send(data);
 	}
 
 	recieve(data: any) {
-		console.log(data);
+		//console.log(data);
 
 		if (data.version == 1) {
 			if (data.type == 1) {
@@ -279,7 +307,7 @@ export class GamePage {
 		console.error(err);
 		alert("An error occurred: " + JSON.stringify(err) + ".");
 	}
-	
+
 	close() {
 		this.connected = false;
 		this.user.presentToast(this.player2 + " has disconnected.");
@@ -391,7 +419,7 @@ export class GamePage {
 			if (y < ay)
 				this.dropLoop(y + 1, column, ay);
 			else {
-				if (!this.boardplace(this.board, this.round, column)) {
+				if (!this.boardplace([this.board, this.round], column)) {
 					return alert("Invalid move.");
 				}
 
@@ -417,7 +445,7 @@ export class GamePage {
 				var startzeit = new Date().getTime();
 
 				// Algorithm call
-				var ai_move = this.maximizePlay(this.copy(this.board, 0), this.depth, 0, 0);
+				var ai_move = this.maximizePlay(this.copy(this.board, this.round), this.depth);
 
 				var laufzeit = new Date().getTime() - startzeit;
 				document.getElementById('ai-time').innerHTML = laufzeit.toFixed(2) + 'ms';
@@ -439,7 +467,7 @@ export class GamePage {
 	 * Algorithm
 	 * Minimax principle
 	 */
-	maximizePlay(board: any, depth: number, alpha: number, beta: number): any {
+	maximizePlay(board: any, depth: number, alpha?: number, beta?: number): any {
 		// Call score of our board
 		var score = this.score(board[0]);
 
@@ -453,7 +481,7 @@ export class GamePage {
 		for (var column = 0; column < this.columns; ++column) {
 			var new_board = this.copy(board[0], board[1]); // Create new board
 
-			if (this.boardplace(new_board[0], new_board[1], column)) {
+			if (this.boardplace(new_board, column)) {
 
 				++this.iterations; // Debug
 
@@ -477,7 +505,7 @@ export class GamePage {
 	/*
 	 * AI
 	 */
-	minimizePlay(board: any, depth: number, alpha: number, beta: number): any {
+	minimizePlay(board: any, depth: number, alpha?: number, beta?: number): any {
 		var score = this.score(board[0]);
 
 		if (this.isFinished(depth, score)) return [null, score];
@@ -488,7 +516,7 @@ export class GamePage {
 		for (var column = 0; column < this.columns; ++column) {
 			var new_board = this.copy(board[0], board[1]);
 
-			if (this.boardplace(new_board[0], new_board[1], column)) {
+			if (this.boardplace(new_board, column)) {
 
 				++this.iterations;
 
@@ -677,18 +705,18 @@ export class GamePage {
 	 * @param {number} column
 	 * @return {boolean} 
 	 */
-	boardplace(field: any, player: any, column: number): boolean {
+	boardplace(board: any[], column: number): boolean {
 		// Check if column valid
 		// 1. not empty 2. not exceeding the board size
-		if (field[0][column] == null && column >= 0 && column < this.columns) {
+		if (board[0][0][column] == null && column >= 0 && column < this.columns) {
 			// Bottom to top
 			for (var y = this.rows - 1; y >= 0; --y) {
-				if (field[y][column] == null) {
-					field[y][column] = player; // Set current player coin
+				if (board[0][y][column] == null) {
+					board[0][y][column] = board[1]; // Set current player coin
 					break; // Break from loop after inserting
 				}
 			}
-			player = this.switchRound(player);
+			board[1] = this.switchRound(board[1]);
 			return true;
 		} else {
 			return false;
@@ -865,7 +893,7 @@ export class GamePage {
 	 *
 	 * @return {Board}
 	 */
-	copy(field: any, player: number): any {
+	copy(field: any, player: number): any[] {
 		var new_board = new Array();
 		for (var i = 0; i < field.length; ++i) {
 			new_board.push(field[i].slice());
