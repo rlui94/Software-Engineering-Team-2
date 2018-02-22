@@ -42,6 +42,7 @@ export class GamePage {
 	host: string = "arteegee.herokuapp.com";
 	port: number = 443;
 	path: string = '/peerjs';
+	aiInfo: boolean;
 
 	constructor(public navCtrl: NavController, public navParams: NavParams, public alertCtrl: AlertController, public loading: LoadingController, private user: User) {
 
@@ -53,8 +54,9 @@ export class GamePage {
 		this.depth = this.navParams.data.depth;
 		this.selectedcolorplayer1 = this.navParams.data.selectedcolorplayer1;
 		this.selectedcolorplayer2 = this.navParams.data.selectedcolorplayer2;
-		this.gameboardColor = this.user.getGameboardColor();
+		this.gameboardColor = this.user.getSettings().gameboardColor;
 		this.status = 0;
+		this.aiInfo = this.user.getSettings().aiInfo;
 
 		this.loader = this.loading.create({
 			content: 'Waiting for your opponent&hellip;',
@@ -189,6 +191,10 @@ export class GamePage {
 				this.updateStatus();
 
 				this.initBoard();
+
+				if(this.opponent == 2 && !this.aiInfo){
+					document.getElementById('debug').style.display = "none";
+				}
 			}
 		}
 
