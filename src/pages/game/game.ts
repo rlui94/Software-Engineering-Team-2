@@ -54,9 +54,11 @@ export class GamePage {
 		this.depth = this.navParams.data.depth;
 		this.selectedcolorplayer1 = this.navParams.data.selectedcolorplayer1;
 		this.selectedcolorplayer2 = this.navParams.data.selectedcolorplayer2;
-		this.gameboardColor = this.user.getSettings().gameboardColor;
 		this.status = 0;
-		this.aiInfo = this.user.getSettings().aiInfo;
+		let settings = this.user.getSettings();
+		this.gameboardColor = settings.gameboardColor;
+		this.aiInfo = settings.aiInfo;
+
 
 		this.loader = this.loading.create({
 			content: 'Waiting for your opponent&hellip;',
@@ -192,13 +194,10 @@ export class GamePage {
 
 				this.initBoard();
 
-				if(this.opponent == 2 && !this.aiInfo){
-					document.getElementById('debug').style.display = "none";
-				}
 			}
 		}
 
-		if (this.opponent != 2) {
+		if (this.opponent != 2 || !this.aiInfo) {
 			document.getElementById('debug').style.display = "none";
 		}
 	}
