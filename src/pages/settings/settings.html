@@ -15,4 +15,11 @@
 		<ion-label>Gameboard Color</ion-label>
 		<ion-input type="color" [(ngModel)]="gameboard_color" name="gameboard_color" value="gameboard_color" (ionChange)="updateGameboardColor()"></ion-input>
 	</ion-item>
+
+	<ion-item>
+		<ion-label>Show AI Info</ion-label>
+		<ion-toggle [(ngModel)]="ai_info_toggle" name="ai_info_toggle" value="ai_info_toggle" (ionChange)="toggleAiInfo()"></ion-toggle>
+	</ion-item>
+
 </ion-content>
+
