@@ -34,6 +34,7 @@ export class GamePage {
 	selectedcolorplayer2: string = "#FF0000";
 	gameCode: string = "";
 	gameboardColor: string = "#0066FF";
+	aiInfo: boolean = true;
 	peer: any;
 	conn: any;
 	connected: boolean = false;
@@ -42,7 +43,6 @@ export class GamePage {
 	host: string = "arteegee.herokuapp.com";
 	port: number = 443;
 	path: string = '/peerjs';
-	aiInfo: boolean;
 
 	constructor(public navCtrl: NavController, public navParams: NavParams, public alertCtrl: AlertController, public loading: LoadingController, private user: User) {
 
@@ -206,6 +206,32 @@ export class GamePage {
 		if (this.opponent == 3 || this.opponent == 4)
 			if (!!this.peer && !this.peer.destroyed)
 				this.peer.destroy();
+	}
+
+	ionViewCanLeave(): Promise<void> {
+		if (this.winner == 0) {
+			return new Promise((resolve, reject) => {
+				let confirm = this.alertCtrl.create({
+					title: 'Confirm',
+					message: 'Are you sure you want to stop the game?',
+					buttons: [{
+						text: 'Stop Game',
+						handler: () => {
+							resolve();
+						},
+					}, {
+						text: 'Cancel',
+						role: 'cancel',
+						handler: () => {
+							reject();
+						}
+					}],
+				});
+				confirm.present();
+			});
+		} else {
+			return Promise.resolve();
+		}
 	}
 
 	ping() {

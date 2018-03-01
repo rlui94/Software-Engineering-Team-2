@@ -4,7 +4,7 @@ import { Storage } from '@ionic/storage';
 
 let defaultSettings = {
 	gameboardColor: "#0066FF",
-	aiInfo: true,
+	aiInfo: true
 };
 
 @Injectable()

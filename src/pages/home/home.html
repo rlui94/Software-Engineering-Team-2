@@ -65,7 +65,7 @@
 
 				<ion-item *ngIf="formData.value.opponent == 1">
 					<ion-label floating>Name:</ion-label>
-					<ion-input type="text" [(ngModel)]="player2" name="player2" required></ion-input>
+					<ion-input type="text" [(ngModel)]="player2" name="player2" pattern="[a-zA-Z0-9\- ]+" required></ion-input>
 				</ion-item>
 
 				<ion-item>
@@ -79,7 +79,7 @@
 					<ion-segment-button value="2">
 						Easy
 					</ion-segment-button>
-					<ion-segment-button value="4">
+					<ion-segment-button value="4" checked>
 						Medium
 					</ion-segment-button>
 					<ion-segment-button value="6">
