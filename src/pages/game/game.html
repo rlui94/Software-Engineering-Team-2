@@ -12,31 +12,47 @@
 
 <ion-content>
 	<div class="box-left">
-		<h2 *ngIf="round == 0 && status == 0">{{player1}}
-			<span [style.color]="selectedcolorplayer1">⬤</span>
-		</h2>
-		<h2 *ngIf="round == 1 && status == 0">{{player2}}
-			<span [style.color]="selectedcolorplayer2">⬤</span>
-		</h2>
-		<h2 *ngIf="winner == 1">{{player1}} won the game!</h2>
-		<h2 *ngIf="winner == 2">{{player2}} won the game!</h2>
-		<h2 *ngIf="winner == 3">Tied!</h2>
-		<p>Round: {{currentRound}} / {{rounds}}</p>
-		<table id="game_board" [style.background]="gameboardColor">
-			<tr *ngFor="let i of arows">
-				<td *ngFor="let j of acolumns" (click)="act($event)" class='empty'></td>
-			</tr>
-		</table>
-		<div id="loading">The Computer is thinking&hellip;</div>
-		<h3 *ngIf="rounds > 1">Score: {{player1Wins}} - {{player2Wins}} - {{ties}}</h3>
-		<p>Player 1 is
-			<span [style.color]="selectedcolorplayer1">
-				<strong>⬤</strong>
-			</span> Player 2 is
-			<span [style.color]="selectedcolorplayer2">
-				<strong>⬤</strong>
-			</span>
-		</p>
+		<div style="display: inline-block">
+			<div style="overflow: hidden">
+				<div *ngIf="round == 0 && status == 0">
+					<h2 style="float: left">
+						{{player1}}
+						<span [style.color]="selectedcolorplayer1">⬤</span>
+					</h2>
+					<h4 style="float: right">
+						<span [style.color]="selectedcolorplayer2">⬤</span> {{player2}}
+					</h4>
+				</div>
+				<div *ngIf="round == 1 && status == 0">
+					<h4 style="float: left">
+						{{player1}}
+						<span [style.color]="selectedcolorplayer1">⬤</span>
+					</h4>
+					<h2 style="float: right">
+						<span [style.color]="selectedcolorplayer2">⬤</span> {{player2}}
+					</h2>
+				</div>
+			</div>
+			<h2 *ngIf="winner == 1">{{player1}} won the game!</h2>
+			<h2 *ngIf="winner == 2">{{player2}} won the game!</h2>
+			<h2 *ngIf="winner == 3">Tied!</h2>
+			<p>Round: {{currentRound}} / {{rounds}}</p>
+			<table id="game_board" [style.background]="gameboardColor">
+				<tr *ngFor="let i of arows">
+					<td *ngFor="let j of acolumns" (click)="act($event)" class='empty'></td>
+				</tr>
+			</table>
+			<div id="loading">The Computer is thinking&hellip;</div>
+			<h3 *ngIf="rounds > 1">Score: {{player1Wins}} - {{player2Wins}} - {{ties}}</h3>
+			<p>Player 1 is
+				<span [style.color]="selectedcolorplayer1">
+					<strong>⬤</strong>
+				</span> Player 2 is
+				<span [style.color]="selectedcolorplayer2">
+					<strong>⬤</strong>
+				</span>
+			</p>
+		</div>
 	</div>
 
 	<div class="box-right">

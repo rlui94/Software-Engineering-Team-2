@@ -8,15 +8,16 @@ import { User } from './../../providers/user';
 	templateUrl: 'settings.html'
 })
 export class SettingsPage {
-	gameboard_color: string;
-	ai_info_toggle: boolean;
+	gameboard_color: string = "#0066FF";
+	ai_info_toggle: boolean = true;
 
 	constructor(public navCtrl: NavController, public navParams: NavParams, private user: User) {
 	}
 
 	ngOnInit() {
-		this.gameboard_color = this.user.getSettings().gameboardColor;
-		this.ai_info_toggle = this.user.getSettings().aiInfo;
+		let settings = this.user.getSettings();
+		this.gameboard_color = settings.gameboardColor;
+		this.ai_info_toggle = settings.aiInfo;
 	}
 
 	updateGameboardColor() {

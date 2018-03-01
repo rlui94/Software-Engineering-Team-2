@@ -47,6 +47,12 @@
     "typescript": "2.4.2"
   },
   "description": "An Ionic project",
+  "cordovaPlatforms": [],
+  "-vs-binding": {
+    "BeforeBuild": [
+      "ionic:build"
+    ]
+  },
   "cordova": {
     "plugins": {
       "ionic-plugin-keyboard": {},
