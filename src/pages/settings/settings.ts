@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams } from 'ionic-angular';
+import { NavController, NavParams, PopoverController } from 'ionic-angular';
 
 import { User } from './../../providers/user';
+import { PopoverSettingsPage } from './popover';
 
 @Component({
 	selector: 'page-settings',
@@ -11,7 +12,7 @@ export class SettingsPage {
 	gameboard_color: string = "#0066FF";
 	ai_info_toggle: boolean = true;
 
-	constructor(public navCtrl: NavController, public navParams: NavParams, private user: User) {
+	constructor(public navCtrl: NavController, public navParams: NavParams, private user: User, private popoverCtrl: PopoverController) {
 	}
 
 	ngOnInit() {
@@ -26,6 +27,11 @@ export class SettingsPage {
 
 	toggleAiInfo() {
 		this.user.changeSetting('aiInfo', this.ai_info_toggle);
+	}
+
+	presentPopover(event: Event) {
+		let popover = this.popoverCtrl.create(PopoverSettingsPage);
+		popover.present({ ev: event });
 	}
 
 }
