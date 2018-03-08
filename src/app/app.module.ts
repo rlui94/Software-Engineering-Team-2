@@ -15,6 +15,7 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { Network } from '@ionic-native/network';
 import { Diagnostic } from '@ionic-native/diagnostic'
+import { SocialSharing } from '@ionic-native/social-sharing';
 
 import { User } from '../providers/user';
 import { NetworkService } from '../providers/network-service';
@@ -49,6 +50,7 @@ import { NetworkService } from '../providers/network-service';
 		SplashScreen,
 		Network,
 		Diagnostic,
+		SocialSharing,
 		{ provide: ErrorHandler, useClass: IonicErrorHandler },
 		User,
 		NetworkService

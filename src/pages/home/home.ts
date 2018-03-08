@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
 
-import { User } from './../../providers/user';
 import { NetworkService } from '../../providers/network-service';
 
 import { GamePage } from '../game/game';
@@ -22,7 +21,7 @@ export class HomePage {
 	selectedcolorplayer2: string = "#FF0000";
 	gameCode: string = "";
 
-	constructor(public navCtrl: NavController, private user: User, private networkService: NetworkService) {
+	constructor(public navCtrl: NavController, private networkService: NetworkService) {
 
 	}
 

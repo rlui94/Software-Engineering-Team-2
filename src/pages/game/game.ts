@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { NavController, NavParams, AlertController, LoadingController } from 'ionic-angular';
+import { SocialSharing } from '@ionic-native/social-sharing';
 import Peer from 'peerjs';
 
 import { User } from './../../providers/user';
@@ -44,7 +45,7 @@ export class GamePage {
 	port: number = 443;
 	path: string = '/peerjs';
 
-	constructor(public navCtrl: NavController, public navParams: NavParams, public alertCtrl: AlertController, public loading: LoadingController, private user: User) {
+	constructor(public navCtrl: NavController, public navParams: NavParams, public alertCtrl: AlertController, public loading: LoadingController, private socialSharing: SocialSharing, private user: User) {
 
 	}
 
@@ -133,6 +134,20 @@ export class GamePage {
 								//console.log('Cancel clicked');
 
 								this.navCtrl.pop();
+							}
+						},
+						{
+							text: 'Share',
+							handler: data => {
+								//console.log(data);
+
+								this.socialSharing.share(this.player1 + "'s Game Code: " + this.gameCode, 'Connect Four Game Code', null, null).then(() => {
+									this.user.presentToast('The Game Code was successfully shared.');
+								}).catch(() => {
+									alert('An error occurred sharing the Game Code.');
+								});
+								
+								return false;
 							}
 						},
 						{
