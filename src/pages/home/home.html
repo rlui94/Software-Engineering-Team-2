@@ -9,7 +9,6 @@
 		</ion-title>
 	</ion-navbar>
 </ion-header>
-
 <ion-content>
 	<ion-list>
 		<form #formData='ngForm' (ngSubmit)="onSubmit(formData.value)">
@@ -34,6 +33,10 @@
 						<ion-label>Human vs Computer (AI)</ion-label>
 						<ion-radio value="2" checked></ion-radio>
 					</ion-item>
+          <ion-item>
+            <ion-label>Computer vs Computer (AI)</ion-label>
+            <ion-radio value="5" checked></ion-radio>
+          </ion-item>
 				</ion-list>
 
 				<ion-item *ngIf="formData.value.opponent == 4">
@@ -46,6 +49,7 @@
 				<ion-card-header *ngIf="formData.value.opponent == 1">Player 1</ion-card-header>
 				<ion-card-header *ngIf="formData.value.opponent == 2">The Human</ion-card-header>
 				<ion-card-header *ngIf="formData.value.opponent == 3 || formData.value.opponent  == 4">You</ion-card-header>
+        <ion-card-header *ngIf="formData.value.opponent == 5">AI 1</ion-card-header>
 
 				<ion-item>
 					<ion-label floating>Name:</ion-label>
@@ -62,8 +66,9 @@
 				<ion-card-header *ngIf="formData.value.opponent == 1">Player 2</ion-card-header>
 				<ion-card-header *ngIf="formData.value.opponent == 2">The Computer</ion-card-header>
 				<ion-card-header *ngIf="formData.value.opponent == 3 || formData.value.opponent == 4">Your Opponent</ion-card-header>
+        <ion-card-header *ngIf="formData.value.opponent == 5">AI 2</ion-card-header>
 
-				<ion-item *ngIf="formData.value.opponent == 1">
+				<ion-item *ngIf="formData.value.opponent == 1 || formData.value.opponent == 2 || formData.value.opponent == 5">
 					<ion-label floating>Name:</ion-label>
 					<ion-input type="text" [(ngModel)]="player2" name="player2" pattern="[a-zA-Z0-9\- ]+" required></ion-input>
 				</ion-item>
@@ -73,9 +78,9 @@
 					<ion-input type="color" [(ngModel)]="selectedcolorplayer2" name="selectedcolorplayer2" value="#FF0000" required></ion-input>
 				</ion-item>
 
-				<ion-list-header *ngIf="formData.value.opponent == 2">Difficulty:</ion-list-header>
+				<ion-list-header *ngIf="formData.value.opponent == 2 || formData.value.opponent == 5">Difficulty:</ion-list-header>
 
-				<ion-segment *ngIf="formData.value.opponent == 2" [(ngModel)]="depth" name="depth" required>
+				<ion-segment *ngIf="formData.value.opponent == 2 || formData.value.opponent == 5" [(ngModel)]="depth" name="depth" required>
 					<ion-segment-button value="2">
 						Easy
 					</ion-segment-button>
@@ -108,12 +113,14 @@
 						<ion-label *ngIf="formData.value.opponent == 1">Player 1</ion-label>
 						<ion-label *ngIf="formData.value.opponent == 2">Human</ion-label>
 						<ion-label *ngIf="formData.value.opponent == 3">You</ion-label>
+            <ion-label *ngIf="formData.value.opponent == 5">AI 1</ion-label>
 						<ion-radio value="0" checked></ion-radio>
 					</ion-item>
 					<ion-item>
 						<ion-label *ngIf="formData.value.opponent == 1">Player 2</ion-label>
 						<ion-label *ngIf="formData.value.opponent == 2">Computer</ion-label>
 						<ion-label *ngIf="formData.value.opponent == 3">Opponent</ion-label>
+            <ion-label *ngIf="formData.value.opponent == 5">AI 2</ion-label>
 						<ion-radio value="1"></ion-radio>
 					</ion-item>
 				</ion-list>
