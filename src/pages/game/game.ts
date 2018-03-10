@@ -20,7 +20,6 @@ export class GamePage {
 	round: number = 0; 	// 0: Human, 1: Computer
 	first: number = 0; 	// 0: Human, 1: Computer
 	winning_array: number[] = []; // Winning (chips) array
-	iterations: number = 0; // Iteration count
 	opponent: number = 2;
 	board: any;
 	player1: string;
@@ -36,6 +35,10 @@ export class GamePage {
 	gameCode: string = "";
 	gameboardColor: string = "#0066FF";
 	aiInfo: boolean = true;
+	aiTime: number = 0;
+	aiColumn: number = 0;
+	aiScore: number = 0;
+	aiIterations: number = 0;
 	peer: any;
 	conn: any;
 	connected: boolean = false;
@@ -59,6 +62,7 @@ export class GamePage {
 		let settings = this.user.getSettings();
 		this.gameboardColor = settings.gameboardColor;
 		this.aiInfo = settings.aiInfo;
+		this.resetAiStats();
 
 
 		this.loader = this.loading.create({
@@ -210,10 +214,6 @@ export class GamePage {
 				this.initBoard();
 
 			}
-		}
-
-		if (this.opponent != 2 || !this.aiInfo) {
-			document.getElementById('debug').style.display = "none";
 		}
 	}
 
@@ -482,7 +482,6 @@ export class GamePage {
 	 */
 	generateComputerDecision(): void {
 		if (this.score(this.board) != this.ascore && this.score(this.board) != -this.ascore && !this.isFull(this.board)) {
-			this.iterations = 0; // Reset iteration count
 			document.getElementById('loading').style.display = "block"; // Loading message
 
 			// AI is thinking
@@ -493,16 +492,14 @@ export class GamePage {
 				// Algorithm call
 				var ai_move = this.maximizePlay(this.copy(this.board, this.round), this.depth);
 
-				var laufzeit = new Date().getTime() - startzeit;
-				document.getElementById('ai-time').innerHTML = laufzeit.toFixed(2) + 'ms';
+				this.aiTime = new Date().getTime() - startzeit;
 
 				// Place ai decision
 				this.place(ai_move[0]);
 
 				// Debug
-				document.getElementById('ai-column').innerHTML = 'Column: ' + parseInt(ai_move[0] + 1);
-				document.getElementById('ai-score').innerHTML = 'Score: ' + ai_move[1];
-				document.getElementById('ai-iterations').innerHTML = this.iterations.toString();
+				this.aiColumn = ai_move[0] + 1;
+				this.aiScore = ai_move[1];
 
 				document.getElementById('loading').style.display = "none"; // Remove loading message
 			}, 100);
@@ -529,7 +526,7 @@ export class GamePage {
 
 			if (this.boardplace(new_board, column)) {
 
-				++this.iterations; // Debug
+				++this.aiIterations; // Debug
 
 				var next_move = this.minimizePlay(new_board, depth - 1, alpha, beta); // Recursive calling
 
@@ -564,7 +561,7 @@ export class GamePage {
 
 			if (this.boardplace(new_board, column)) {
 
-				++this.iterations;
+				++this.aiIterations;
 
 				var next_move = this.maximizePlay(new_board, depth - 1, alpha, beta);
 
@@ -617,11 +614,7 @@ export class GamePage {
 		}
 
 		this.board = game_board;
-		document.getElementById('ai-iterations').innerHTML = "?";
-		document.getElementById('ai-time').innerHTML = "?";
-		document.getElementById('ai-column').innerHTML = "Column: ?";
-		document.getElementById('ai-score').innerHTML = "Score: ?";
-		document.getElementById('game_board').className = "";
+		this.resetAiStats();
 		this.updateStatus();
 	}
 
@@ -705,22 +698,13 @@ export class GamePage {
 
 			this.showAlert("Tie!", "");
 		}
+	}
 
-
-		var html = document.getElementById('status');
-		if (this.status == 0) {
-			html.className = "status-running";
-			html.innerHTML = "running";
-		} else if (this.status == 1) {
-			html.className = "status-won";
-			html.innerHTML = "won";
-		} else if (this.status == 2) {
-			html.className = "status-lost";
-			html.innerHTML = "lost";
-		} else {
-			html.className = "status-tie";
-			html.innerHTML = "tie";
-		}
+	resetAiStats(): void {
+		this.aiTime = 0;
+		this.aiColumn = 0;
+		this.aiScore = 0;
+		this.aiIterations = 0;
 	}
 
 	markWin(): void {

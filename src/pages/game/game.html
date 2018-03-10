@@ -55,21 +55,21 @@
 		</div>
 	</div>
 
-	<div class="box-right">
-		<div id="debug">
-			<h3>Info</h3>
-			<p>Generated with
-				<span id="ai-iterations">?</span> iterations
-				<br> Measured with
-				<span id="ai-time">?</span>
-				<br>
-				<span id="ai-column">Column: ?</span>
-				<br>
-				<span id="ai-score">Score: ?</span>
-			</p>
-			<p>Status:
-				<span id="status" class="status-running">running</span>
-			</p>
-		</div>
+	<div *ngIf="opponent == 2 && aiInfo">
+		<h3>Info</h3>
+		<p>	Iterations: {{aiIterations}}
+			<br>
+			Time: {{aiTime}} ms
+			<br>
+			Column: {{aiColumn}}
+			<br>
+			Score: {{aiScore}}
+		</p>
+		<p>Status:
+			<span *ngIf="status == 0" class="status-running">Running</span>
+			<span *ngIf="status == 1" class="status-won">Won</span>
+			<span *ngIf="status == 2" class="status-lost">Lost</span>
+			<span *ngIf="status == 3" class="status-tie">Tie</span>
+		</p>
 	</div>
 </ion-content>
