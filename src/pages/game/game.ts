@@ -614,6 +614,7 @@ export class GamePage {
 		}
 
 		this.board = game_board;
+		document.getElementById('game_board').className = "";
 		this.resetAiStats();
 		this.updateStatus();
 	}
