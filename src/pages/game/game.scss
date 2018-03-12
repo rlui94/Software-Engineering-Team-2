@@ -8,11 +8,14 @@ page-game {
   margin: auto;
   border-collapse: separate;
   border-spacing: 10px;
+  border: 5px solid #000000;
+  border-radius: 10px;
   td {
     background-color: #FFFFFF;
+    border: 5px solid #000000;
     position: relative;
-    width: 5vw;
-    height: 5vw;
+    width: 6vw;
+    height: 6vw;
     cursor: pointer;
     &:hover::after {
       background-color: #F4F4F4;
@@ -22,7 +25,8 @@ page-game {
       position: absolute;
       top: -5000px;
       width: 100%;
-      z-index: -1;
+      z-index: 1;
+      opacity: .3;
     }
   }
 }
@@ -71,11 +75,6 @@ page-game {
   100% {
     opacity: 1;
   }
-}
-
-
-.box-right {
-
 }
 
 .box-left {

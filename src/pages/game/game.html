@@ -57,13 +57,10 @@
 
 	<div *ngIf="opponent == 2 && aiInfo">
 		<h3>Info</h3>
-		<p>	Iterations: {{aiIterations}}
-			<br>
-			Time: {{aiTime}} ms
-			<br>
-			Column: {{aiColumn}}
-			<br>
-			Score: {{aiScore}}
+		<p> Iterations: {{aiIterations}}
+			<br> Time: {{aiTime}} ms
+			<br> Column: {{aiColumn}}
+			<br> Score: {{aiScore}}
 		</p>
 		<p>Status:
 			<span *ngIf="status == 0" class="status-running">Running</span>

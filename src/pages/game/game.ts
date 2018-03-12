@@ -82,9 +82,7 @@ export class GamePage {
 				debug: 3*/
 			});
 
-			this.ping();
-
-			this.peer.on('open', (id) => { });
+			this.peer.on('open', (id) => { this.ping(); });
 			this.peer.on('error', (err: any) => { this.error(err); });
 
 			this.conn = this.peer.connect(this.gameCode);
@@ -174,9 +172,7 @@ export class GamePage {
 					debug: 3*/
 				});
 
-				this.ping();
-
-				this.peer.on('open', (id) => { });
+				this.peer.on('open', (id) => { this.ping(); });
 				this.peer.on('error', (err: any) => { this.error(err); });
 
 				this.peer.on('connection', (conn) => {
@@ -482,6 +478,7 @@ export class GamePage {
 	 */
 	generateComputerDecision(): void {
 		if (this.score(this.board) != this.ascore && this.score(this.board) != -this.ascore && !this.isFull(this.board)) {
+			this.aiIterations = 0; // Reset iteration count
 			document.getElementById('loading').style.display = "block"; // Loading message
 
 			// AI is thinking
