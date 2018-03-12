@@ -35,7 +35,7 @@
 					</ion-item>
           <ion-item>
             <ion-label>Computer vs Computer (AI)</ion-label>
-            <ion-radio value="5" checked></ion-radio>
+            <ion-radio value="5" ></ion-radio>
           </ion-item>
 				</ion-list>
 
@@ -51,7 +51,7 @@
 				<ion-card-header *ngIf="formData.value.opponent == 3 || formData.value.opponent  == 4">You</ion-card-header>
         <ion-card-header *ngIf="formData.value.opponent == 5">AI 1</ion-card-header>
 
-				<ion-item>
+				<ion-item *ngIf="formData.value.opponent != 5">
 					<ion-label floating>Name:</ion-label>
 					<ion-input type="text" [(ngModel)]="player1" name="player1" pattern="[a-zA-Z0-9\- ]+" required></ion-input>
 				</ion-item>
@@ -68,7 +68,7 @@
 				<ion-card-header *ngIf="formData.value.opponent == 3 || formData.value.opponent == 4">Your Opponent</ion-card-header>
         <ion-card-header *ngIf="formData.value.opponent == 5">AI 2</ion-card-header>
 
-				<ion-item *ngIf="formData.value.opponent == 1 || formData.value.opponent == 2 || formData.value.opponent == 5">
+				<ion-item *ngIf="formData.value.opponent == 1 || formData.value.opponent == 2">
 					<ion-label floating>Name:</ion-label>
 					<ion-input type="text" [(ngModel)]="player2" name="player2" pattern="[a-zA-Z0-9\- ]+" required></ion-input>
 				</ion-item>

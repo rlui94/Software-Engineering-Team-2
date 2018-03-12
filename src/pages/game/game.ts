@@ -186,8 +186,8 @@ export class GamePage {
 				});
 			}
 			else if(this.opponent == 5){
-			  this.player1 = this.navParams.data.player1;
-			  this.player2 = this.navParams.data.player2;
+			  this.player1 = "Computer 1";
+			  this.player2 = "Computer 2";
 			  this.initBoard();
 			  this.updateStatus();
 			  this.initBoard();
@@ -683,8 +683,9 @@ export class GamePage {
 			this.status = 1;
 			this.markWin();
 			++this.player1Wins;
-
-			let score = this.user.setscore(this.player1, 1);
+      if(this.opponent != 5) {
+			  let score = this.user.setscore(this.player1, 1);
+			}
 			this.showAlert(this.player1 + " has won round " + this.currentRound + "!", "New high score of " + score + ".");
 		}
 
@@ -696,7 +697,7 @@ export class GamePage {
 
 			let title = this.player2 + " has won round " + this.currentRound + "!";
 			let message = "";
-			if (this.opponent != 2) {
+			if (this.opponent != 2 || this.opponent != 5) {
 				let score = this.user.setscore(this.player2, 1);
 				message = "New high score of " + score + "."
 			}
