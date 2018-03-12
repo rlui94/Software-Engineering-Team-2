@@ -200,6 +200,16 @@ export class GamePage {
 					}
 				});
 			}
+			else if(this.opponent == 5){
+			  this.player1 = "Computer 1";
+			  this.player2 = "Computer 2";
+			  this.initBoard();
+			  this.updateStatus();
+			  this.initBoard();
+			  setTimeout(() => {
+        		    this.generateComputerDecision();
+        		  }, 1000);
+			}
 			else {
 				this.player2 = this.opponent == 2 ? "Computer" : this.navParams.data.player2;
 
@@ -468,6 +478,11 @@ export class GamePage {
 				this.round = this.switchRound(this.round);
 				this.updateStatus();
 				this.updateRound();
+						if(this.opponent == 5){
+        		  setTimeout(() => {
+            	  this.generateComputerDecision()
+            	} ,500);
+        		};
 			}
 		}, 50);
 	}
@@ -614,15 +629,20 @@ export class GamePage {
 		document.getElementById('game_board').className = "";
 		this.resetAiStats();
 		this.updateStatus();
+		if(this.opponent == 5){
+		setTimeout(() => {
+    		    this.generateComputerDecision();
+    		  }, 1000);
+		}
 	}
 
 
 	/*
 	 * Decides what do to after a round is finished.
-	 * 1)Clear board for another round, 
-	 * or 
+	 * 1)Clear board for another round,
+	 * or
 	 * 2)Marks the winner of the game by checking player scores.
-	 * 
+	 *
 	 */
 	updateRound(): void {
 
@@ -669,8 +689,9 @@ export class GamePage {
 			this.status = 1;
 			this.markWin();
 			++this.player1Wins;
-
-			let score = this.user.setscore(this.player1, 1);
+      if(this.opponent != 5) {
+			  let score = this.user.setscore(this.player1, 1);
+			}
 			this.showAlert(this.player1 + " has won round " + this.currentRound + "!", "New high score of " + score + ".");
 		}
 
@@ -682,7 +703,7 @@ export class GamePage {
 
 			let title = this.player2 + " has won round " + this.currentRound + "!";
 			let message = "";
-			if (this.opponent != 2) {
+			if (this.opponent != 2 || this.opponent != 5) {
 				let score = this.user.setscore(this.player2, 1);
 				message = "New high score of " + score + "."
 			}
@@ -731,7 +752,7 @@ export class GamePage {
 	 * Place in current board.
 	 *
 	 * @param {number} column
-	 * @return {boolean} 
+	 * @return {boolean}
 	 */
 	boardplace(board: any[], column: number): boolean {
 		// Check if column valid
@@ -794,7 +815,8 @@ export class GamePage {
 			return this.ascore;
 		} else {
 			// Return normal points
-			return computer_points;
+			if(this.round == 1){return computer_points;}
+			else{return human_points;}
 		}
 	}
 
@@ -817,7 +839,7 @@ export class GamePage {
 
 		// Vertical points
 		// Check each column for vertical score
-		// 
+		//
 		// Possible situations
 		//  0  1  2  3  4  5  6
 		// [x][ ][ ][ ][ ][ ][ ] 0
@@ -826,11 +848,11 @@ export class GamePage {
 		// [x][x][x][ ][ ][ ][ ] 3
 		// [ ][x][x][ ][ ][ ][ ] 4
 		// [ ][ ][x][ ][ ][ ][ ] 5
-		for (var row = 0; row < this.rows - 3; ++row) {
+		for (let row = 0; row < this.rows - 3; ++row) {
 			// Für jede Column überprüfen
-			for (var column = 0; column < this.columns; ++column) {
+			for (let column = 0; column < this.columns; ++column) {
 				// Die Column bewerten und zu den Punkten hinzufügen
-				var score = this.scorePosition(field, row, column, 1, 0);
+				let score = this.scorePosition(field, row, column, 1, 0);
 				if (score == this.ascore) return this.ascore;
 				if (score == -this.ascore) return -this.ascore;
 				vertical_points += score;
@@ -839,7 +861,7 @@ export class GamePage {
 
 		// Horizontal points
 		// Check each row's score
-		// 
+		//
 		// Possible situations
 		//  0  1  2  3  4  5  6
 		// [x][x][x][x][ ][ ][ ] 0
@@ -848,9 +870,9 @@ export class GamePage {
 		// [ ][ ][ ][x][x][x][x] 3
 		// [ ][ ][ ][ ][ ][ ][ ] 4
 		// [ ][ ][ ][ ][ ][ ][ ] 5
-		for (var row = 0; row < this.rows; ++row) {
-			for (var column = 0; column < this.columns - 3; ++column) {
-				var score = this.scorePosition(field, row, column, 0, 1);
+		for (let row = 0; row < this.rows; ++row) {
+			for (let column = 0; column < this.columns - 3; ++column) {
+				let score = this.scorePosition(field, row, column, 0, 1);
 				if (score == this.ascore) return this.ascore;
 				if (score == -this.ascore) return -this.ascore;
 				horizontal_points += score;
@@ -869,9 +891,9 @@ export class GamePage {
 		// [ ][ ][ ][x][ ][ ][ ] 3
 		// [ ][ ][ ][ ][ ][ ][ ] 4
 		// [ ][ ][ ][ ][ ][ ][ ] 5
-		for (var row = 0; row < this.rows - 3; ++row) {
-			for (var column = 0; column < this.columns - 3; ++column) {
-				var score = this.scorePosition(field, row, column, 1, 1);
+		for (let row = 0; row < this.rows - 3; ++row) {
+			for (let column = 0; column < this.columns - 3; ++column) {
+				let score = this.scorePosition(field, row, column, 1, 1);
 				if (score == this.ascore) return this.ascore;
 				if (score == -this.ascore) return -this.ascore;
 				diagonal_points1 += score;
@@ -888,9 +910,9 @@ export class GamePage {
 		// [x][ ][ ][ ][ ][ ][ ] 3
 		// [ ][ ][ ][ ][ ][ ][ ] 4
 		// [ ][ ][ ][ ][ ][ ][ ] 5
-		for (var row = 3; row < this.rows; ++row) {
-			for (var column = 0; column <= this.columns - 4; ++column) {
-				var score = this.scorePosition(field, row, column, -1, +1);
+		for (let row = 3; row < this.rows; ++row) {
+			for (let column = 0; column <= this.columns - 4; ++column) {
+				let score = this.scorePosition(field, row, column, -1, +1);
 				if (score == this.ascore) return this.ascore;
 				if (score == -this.ascore) return -this.ascore;
 				diagonal_points2 += score;
