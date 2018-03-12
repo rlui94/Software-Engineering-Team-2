@@ -25,4 +25,11 @@
 		<ion-label>Show AI Info</ion-label>
 		<ion-toggle [(ngModel)]="ai_info_toggle" name="ai_info_toggle" value="ai_info_toggle" (ionChange)="toggleAiInfo()"></ion-toggle>
 	</ion-item>
+
+	<ion-list>
+		<ion-list-header>Connect Four App</ion-list-header>
+		<button ion-item (click)="showAbout()">About Connect Four</button>
+		<button ion-item (click)="showOpenSource()">License</button>
+		<button ion-item (click)="showFeedback()">Send Feedback</button>
+	</ion-list>
 </ion-content>
