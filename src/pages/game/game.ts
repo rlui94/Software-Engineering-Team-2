@@ -817,7 +817,8 @@ export class GamePage {
 			return this.ascore;
 		} else {
 			// Return normal points
-			return computer_points;
+			if(this.round == 1){return computer_points;}
+			else{return human_points;}
 		}
 	}
 
