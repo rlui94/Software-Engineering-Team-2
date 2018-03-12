@@ -191,6 +191,9 @@ export class GamePage {
 			  this.initBoard();
 			  this.updateStatus();
 			  this.initBoard();
+			  setTimeout(() => {
+        		    this.generateComputerDecision();
+        		  }, 1000);
 			}
 			else {
 				this.player2 = this.opponent == 2 ? "Computer" : this.navParams.data.player2;
@@ -386,11 +389,6 @@ export class GamePage {
 		if (this.opponent == 1) {
 			this.place((<HTMLTableCellElement>element).cellIndex);
 		}
-		else if (this.opponent == 5) {
-		  setTimeout(() => {
-		    this.generateComputerDecision();
-		  }, 1000);
-		}
 		else if (this.opponent == 2) {
 
 			// Human round
@@ -469,6 +467,11 @@ export class GamePage {
 				this.round = this.switchRound(this.round);
 				this.updateStatus();
 				this.updateRound();
+						if(this.opponent == 5){
+        		  setTimeout(() => {
+            	  this.generateComputerDecision()
+            	} ,500);
+        		};
 			}
 		}, 50);
 	}
@@ -620,6 +623,11 @@ export class GamePage {
 		document.getElementById('ai-score').innerHTML = "Score: ?";
 		document.getElementById('game_board').className = "";
 		this.updateStatus();
+		if(this.opponent == 5){
+		setTimeout(() => {
+    		    this.generateComputerDecision();
+    		  }, 1000);
+		}
 	}
 
 
