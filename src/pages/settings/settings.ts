@@ -33,22 +33,22 @@ export class SettingsPage {
 	showAbout() {
 		let contributors = '<div>Contributors:<br><a href="https://github.com/AvilaR" target="_blank">Roberto Avila</a><br><a href="https://github.com/tdulcet" target="_blank">Teal Dulcet</a><br><a href="https://github.com/rlui94/Software-Engineering-Team-2" target="_blank">Amandeep Kaur</a><br><a href="https://github.com/rlui94" target="_blank">Ryan Lui</a></div>';
 
-		let attribution = '<div><br>This app uses the Minimax with alpha beta pruning search algorithm to play the Connect Four game and the WebRTC protocol to play online with two devices. For more information on Connect Four, see: <a href="https://en.wikipedia.org/wiki/Connect_Four" target="_blank">https://en.wikipedia.org/wiki/Connect_Four</a>.</div>';
-
-		let adaptations =  '<div><br>Connect Four is adapted from <a href="https://github.com/Gimu" target="_blank">Son Nguyen\'s</a> <a href="https://github.com/Gimu/connect-four-js" target="_blank">Connect Four JS</a> and <a href="https://github.com/hjr265" target="_blank">Mahmud Ridwan\'s</a> <a href="https://github.com/hjr265/arteegee" target="_blank">Connect Four over WebRTC</a>.</div>';
+		let attribution = '<div><br>Connect Four uses the Minimax with alpha beta pruning search algorithm to play the Connect Four game and the WebRTC protocol to play online with two devices. For more information on Connect Four, see: <a href="https://en.wikipedia.org/wiki/Connect_Four" target="_blank">https://en.wikipedia.org/wiki/Connect_Four</a>.</div>';
 
 		let about = this.alertCtrl.create({
 			title: 'About Connect Four',
-			message: contributors + adaptations + attribution,
+			message: contributors + attribution,
 			buttons: ['OK']
 		});
 		about.present();
 	}
 
 	showOpenSource() {
+		let adaptations = '<div><br>Connect Four is adapted from <a href="https://github.com/Gimu" target="_blank">Son Nguyen\'s</a> <a href="https://github.com/Gimu/connect-four-js" target="_blank">Connect Four JS</a> and <a href="https://github.com/hjr265" target="_blank">Mahmud Ridwan\'s</a> <a href="https://github.com/hjr265/arteegee" target="_blank">Connect Four over WebRTC</a>.</div>';
+
 		let openSource = this.alertCtrl.create({
 			title: 'Connect Four License',
-			message: 'Copyright &copy; 2018 The <a href="https://www.pdx.edu/" target="_blank">PSU</a> <a href="https://www.pdx.edu/computer-science/" target="_blank">CS</a> <a href="http://web.cecs.pdx.edu/~xie/se-w18/se-w18.htm" target="_blank">Software Engineering</a> Team 2.<br><br>Connect Four is released under the <a href="https://opensource.org/licenses/MIT" target="_blank">MIT License</a>.<br><br>Source Code: <a href="https://github.com/rlui94/Software-Engineering-Team-2" target="_blank">https://github.com/rlui94/Software-Engineering-Team-2</a>.',
+			message: 'Copyright &copy; 2018 The <a href="https://www.pdx.edu/" target="_blank">PSU</a> <a href="https://www.pdx.edu/computer-science/" target="_blank">CS</a> <a href="http://web.cecs.pdx.edu/~xie/se-w18/se-w18.htm" target="_blank">Software Engineering</a> Team 2.<br><br>Connect Four is released under the <a href="https://opensource.org/licenses/MIT" target="_blank">MIT License</a>.' + adaptations + '<br>Source Code: <a href="https://github.com/rlui94/Software-Engineering-Team-2" target="_blank">https://github.com/rlui94/Software-Engineering-Team-2</a>.',
 			buttons: ['OK']
 		});
 		openSource.present();

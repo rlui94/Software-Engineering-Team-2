@@ -54,7 +54,7 @@ export class GamePage {
 
 	ngOnInit() {
 		this.opponent = this.navParams.data.opponent;
-		this.player1 = this.navParams.data.player1;
+		this.player1 = this.opponent == 5 ? "Computer 1" : this.navParams.data.player1;
 		this.depth = this.navParams.data.depth;
 		this.selectedcolorplayer1 = this.navParams.data.selectedcolorplayer1;
 		this.selectedcolorplayer2 = this.navParams.data.selectedcolorplayer2;
@@ -148,7 +148,7 @@ export class GamePage {
 								}).catch(() => {
 									alert('An error occurred sharing the Game Code.');
 								});
-								
+
 								return false;
 							}
 						},
@@ -200,18 +200,8 @@ export class GamePage {
 					}
 				});
 			}
-			else if(this.opponent == 5){
-			  this.player1 = "Computer 1";
-			  this.player2 = "Computer 2";
-			  this.initBoard();
-			  this.updateStatus();
-			  this.initBoard();
-			  setTimeout(() => {
-        		    this.generateComputerDecision();
-        		  }, 1000);
-			}
 			else {
-				this.player2 = this.opponent == 2 ? "Computer" : this.navParams.data.player2;
+				this.player2 = this.opponent == 2 ? "Computer" : this.opponent == 5 ? "Computer 2" : this.navParams.data.player2;
 
 				this.initBoard();
 
@@ -219,6 +209,11 @@ export class GamePage {
 
 				this.initBoard();
 
+				if (this.opponent == 5 || (this.opponent == 2 && this.first == 1)) {
+					setTimeout(() => {
+						this.generateComputerDecision();
+					}, 1000);
+				}
 			}
 		}
 	}
@@ -478,11 +473,11 @@ export class GamePage {
 				this.round = this.switchRound(this.round);
 				this.updateStatus();
 				this.updateRound();
-						if(this.opponent == 5){
-        		  setTimeout(() => {
-            	  this.generateComputerDecision()
-            	} ,500);
-        		};
+				if (this.opponent == 5) {
+					setTimeout(() => {
+						this.generateComputerDecision()
+					}, this.depth > 4 ? 0 : 500);
+				};
 			}
 		}, 50);
 	}
@@ -629,10 +624,10 @@ export class GamePage {
 		document.getElementById('game_board').className = "";
 		this.resetAiStats();
 		this.updateStatus();
-		if(this.opponent == 5){
-		setTimeout(() => {
-    		    this.generateComputerDecision();
-    		  }, 1000);
+		if (this.opponent == 5 || (this.opponent == 2 && this.first == 1)) {
+			setTimeout(() => {
+				this.generateComputerDecision();
+			}, 1000);
 		}
 	}
 
@@ -689,10 +684,13 @@ export class GamePage {
 			this.status = 1;
 			this.markWin();
 			++this.player1Wins;
-      if(this.opponent != 5) {
-			  let score = this.user.setscore(this.player1, 1);
+			let title = this.player1 + " has won round " + this.currentRound + "!";
+			let message = "";
+			if (this.opponent != 5) {
+				let score = this.user.setscore(this.player1, 1);
+				message = "New high score of " + score + "."
 			}
-			this.showAlert(this.player1 + " has won round " + this.currentRound + "!", "New high score of " + score + ".");
+			this.showAlert(title, message);
 		}
 
 		// Computer won
@@ -703,7 +701,7 @@ export class GamePage {
 
 			let title = this.player2 + " has won round " + this.currentRound + "!";
 			let message = "";
-			if (this.opponent != 2 || this.opponent != 5) {
+			if (this.opponent != 2 && this.opponent != 5) {
 				let score = this.user.setscore(this.player2, 1);
 				message = "New high score of " + score + "."
 			}
@@ -815,8 +813,10 @@ export class GamePage {
 			return this.ascore;
 		} else {
 			// Return normal points
-			if(this.round == 1){return computer_points;}
-			else{return human_points;}
+			if (this.round == 1)
+				return computer_points;
+			else
+				return human_points;
 		}
 	}
 

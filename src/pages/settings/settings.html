@@ -16,20 +16,31 @@
 </ion-header>
 
 <ion-content>
-	<ion-item>
-		<ion-label>Gameboard Color</ion-label>
-		<ion-input type="color" [(ngModel)]="gameboard_color" name="gameboard_color" value="gameboard_color" (ionChange)="updateGameboardColor()"></ion-input>
-	</ion-item>
+	<ion-list>
+		<ion-item>
+			<ion-label>Gameboard Color</ion-label>
+			<ion-input type="color" [(ngModel)]="gameboard_color" name="gameboard_color" value="gameboard_color" (ionChange)="updateGameboardColor()"></ion-input>
+		</ion-item>
 
-	<ion-item>
-		<ion-label>Show AI Info</ion-label>
-		<ion-toggle [(ngModel)]="ai_info_toggle" name="ai_info_toggle" value="ai_info_toggle" (ionChange)="toggleAiInfo()"></ion-toggle>
-	</ion-item>
+		<ion-item>
+			<ion-label>Show AI Info</ion-label>
+			<ion-toggle [(ngModel)]="ai_info_toggle" name="ai_info_toggle" value="ai_info_toggle" (ionChange)="toggleAiInfo()"></ion-toggle>
+		</ion-item>
+	</ion-list>
 
 	<ion-list>
 		<ion-list-header>Connect Four App</ion-list-header>
-		<button ion-item (click)="showAbout()">About Connect Four</button>
-		<button ion-item (click)="showOpenSource()">License</button>
-		<button ion-item (click)="showFeedback()">Send Feedback</button>
+		<button ion-item (click)="showAbout()">
+			<ion-icon name="information"></ion-icon>
+			About Connect Four
+		</button>
+		<button ion-item (click)="showOpenSource()">
+			<ion-icon name="code"></ion-icon>
+			License
+		</button>
+		<button ion-item (click)="showFeedback()">
+			<ion-icon name="thumbs-up"></ion-icon>
+			Submit Feedback
+		</button>
 	</ion-list>
 </ion-content>

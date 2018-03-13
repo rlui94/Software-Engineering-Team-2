@@ -55,7 +55,7 @@
 		</div>
 	</div>
 
-	<div *ngIf="opponent == 2 && aiInfo">
+	<div *ngIf="(opponent == 2 || opponent == 5) && aiInfo">
 		<h3>Info</h3>
 		<p> Iterations: {{aiIterations}}
 			<br> Time: {{aiTime}} ms

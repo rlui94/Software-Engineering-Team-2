@@ -10,6 +10,7 @@ import { ScoresPage } from '../pages/scores/scores';
 import { SettingsPage } from '../pages/settings/settings';
 import { PopoverPage } from '../pages/scores/popover';
 import { PopoverSettingsPage } from '../pages/settings/popover';
+import { Splash } from '../pages/splash/splash';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
@@ -28,7 +29,8 @@ import { NetworkService } from '../providers/network-service';
 		ScoresPage,
 		SettingsPage,
 		PopoverPage,
-		PopoverSettingsPage
+		PopoverSettingsPage,
+		Splash
 	],
 	imports: [
 		BrowserModule,
@@ -43,7 +45,8 @@ import { NetworkService } from '../providers/network-service';
 		ScoresPage,
 		SettingsPage,
 		PopoverPage,
-		PopoverSettingsPage
+		PopoverSettingsPage,
+		Splash
 	],
 	providers: [
 		StatusBar,
