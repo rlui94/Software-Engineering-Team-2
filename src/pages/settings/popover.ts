@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ViewController, NavController, AlertController } from 'ionic-angular';
+import { ViewController, NavController, AlertController, NavParams } from 'ionic-angular';
 
 import { User } from './../../providers/user';
 
@@ -11,12 +11,17 @@ import { User } from './../../providers/user';
 	`
 })
 export class PopoverSettingsPage {
+	callback: Function;
+
 	constructor(
 		public viewCtrl: ViewController,
 		public navCtrl: NavController,
 		private user: User,
-		public alertCtrl: AlertController
-	) { }
+		public alertCtrl: AlertController,
+		public navParams: NavParams
+	) {
+		this.callback = this.navParams.data.callback;
+	}
 
 	resetsettingsTapped(event) {
 		let logout = this.alertCtrl.create({
@@ -31,6 +36,7 @@ export class PopoverSettingsPage {
 					text: 'Reset Settings',
 					handler: () => {
 						this.user.resetsettings();
+						this.callback();
 					}
 				}
 			]

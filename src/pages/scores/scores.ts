@@ -16,11 +16,15 @@ export class ScoresPage {
 	}
 
 	ngOnInit() {
+		this.refresh();
+	}
+
+	refresh() {
 		this.scores = this.user.getscores();
 	}
 
 	presentPopover(event: Event) {
-		let popover = this.popoverCtrl.create(PopoverPage);
+		let popover = this.popoverCtrl.create(PopoverPage, { callback: () => { this.refresh(); } });
 		popover.present({ ev: event });
 	}
 }

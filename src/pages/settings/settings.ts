@@ -17,6 +17,10 @@ export class SettingsPage {
 	}
 
 	ngOnInit() {
+		this.refresh();
+	}
+
+	refresh() {
 		let settings = this.user.getSettings();
 		this.gameboard_color = settings.gameboardColor;
 		this.ai_info_toggle = settings.aiInfo;
@@ -81,7 +85,7 @@ export class SettingsPage {
 	}
 
 	presentPopover(event: Event) {
-		let popover = this.popoverCtrl.create(PopoverSettingsPage);
+		let popover = this.popoverCtrl.create(PopoverSettingsPage, { callback: () => { this.refresh(); } });
 		popover.present({ ev: event });
 	}
 
