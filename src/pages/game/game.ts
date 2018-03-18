@@ -34,7 +34,7 @@ export class GamePage {
 	selectedcolorplayer2: string = "#FF0000";
 	gameCode: string = "";
 	gameboardColor: string = "#0066FF";
-	aiInfo: boolean = true;
+	aiInfo: boolean = false;
 	aiTime: number = 0;
 	aiColumn: number = 0;
 	aiScore: number = 0;
@@ -219,9 +219,12 @@ export class GamePage {
 	}
 
 	ngOnDestroy() {
-		if (this.opponent == 3 || this.opponent == 4)
+		if (this.opponent == 3 || this.opponent == 4) {
 			if (!!this.peer && !this.peer.destroyed)
 				this.peer.destroy();
+
+			this.loader.dismiss();
+		}
 	}
 
 	ionViewCanLeave(): Promise<void> {

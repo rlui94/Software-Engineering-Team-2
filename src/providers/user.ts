@@ -9,7 +9,7 @@ export class User {
 	scores: Array<{ player: string, score: number }> = [];
 	defaultSettings: any = {
 		gameboardColor: "#0066FF",
-		aiInfo: true
+		aiInfo: false
 	};
 
 	constructor(public storage: Storage, private toastCtrl: ToastController, public alertCtrl: AlertController) {

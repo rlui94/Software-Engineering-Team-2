@@ -19,7 +19,9 @@ export class PopoverSettingsPage {
 		private user: User,
 		public alertCtrl: AlertController,
 		public navParams: NavParams
-	) {
+	) { }
+
+	ngOnInit() {
 		this.callback = this.navParams.data.callback;
 	}
 

@@ -11,7 +11,7 @@ import { PopoverSettingsPage } from './popover';
 })
 export class SettingsPage {
 	gameboard_color: string = "#0066FF";
-	ai_info_toggle: boolean = true;
+	ai_info_toggle: boolean = false;
 
 	constructor(public navCtrl: NavController, public navParams: NavParams, private user: User, private popoverCtrl: PopoverController, public alertCtrl: AlertController, private socialSharing: SocialSharing) {
 	}
